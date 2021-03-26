@@ -3,6 +3,8 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 import pprint
+from urllib.request import HTTPCookieProcessor, Request, build_opener
+from http.cookiejar import MozillaCookieJar
 
 pp = pprint.PrettyPrinter(indent=4)
 headers = {'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9'}
@@ -25,8 +27,7 @@ def extract_paper_info(paper_url):
 
     soup = BeautifulSoup(page.content, 'html.parser') 
 
-
-    title = soup.find('div', id = 'gsc_vcd_title').text
+    
     original_url = ""
     description = "" 
     publisher = "" 
@@ -40,12 +41,15 @@ def extract_paper_info(paper_url):
     try:
         original_url = soup.find('a', class_ = 'gcd_vcd_title_link')['href']  
     except:
-        original_url = ""    
+        try:
+            original_url = soup.find('a', class_ = 'gsc_vcd_title_link')['href'] 
+        except:
+            orignial_url = ''
 
     for div in soup.find_all('div', class_ = 'gs_scl'):
         try:
             field = div.find('div', class_ = 'gsc_vcd_field').text
-            value = ''.join(div.find('div', class_ = 'gsc_vcd_value').text)
+            value = div.find('div', class_ = 'gsc_vcd_value').text
             if field == 'Authors':
                 authors = value
             elif field == 'Description':
@@ -63,7 +67,7 @@ def extract_paper_info(paper_url):
         except:
             continue    
     
-    return (True, title, original_url, description, publisher, conference, publication_date, authors, journal, cit_list)
+    return (True, original_url, description, publisher, conference, publication_date, authors, journal, cit_list)
 
 
 def extract_prof_info(scholar_id):
@@ -85,8 +89,7 @@ def extract_prof_info(scholar_id):
     if page.status_code == 404:
         return (False)    
 
-    soup = BeautifulSoup(page.content, 'html.parser')
-    print(soup)
+    soup = BeautifulSoup(page.content, 'html.parser')    
     right_box = soup.find_all("td", class_ = 'gsc_rsb_std')    
     cit = int(right_box[0].string)
     h_ind = int(right_box[2].string)
@@ -118,7 +121,6 @@ papers_info = dict()
 for i in range(1):
 
     scholar_id = df.iloc[i]['scholarid']    
-
     found, name, image_url, affiliation, email, homepage, topics_list, cit, h_ind, i_ind, cit5, h_ind5, i_ind5, cit_list, image_url, papers_url_list, papers_title_list = extract_prof_info(scholar_id)
 
     if not found:
@@ -126,11 +128,11 @@ for i in range(1):
 
     professor_info[scholar_id] = (name, image_url, affiliation, email, homepage, topics_list, cit, h_ind, i_ind, cit5, h_ind5, i_ind5, cit_list, image_url, papers_url_list, papers_title_list)    
 
-    for j in range(max(len(papers_url_list), 5)):
+    for j in range(min(len(papers_url_list), 2)):
 
         paper_url = papers_url_list[j]
-
-        paper_found, title, original_url, description, publisher, conference, publication_date, authors, journal, cit_list = extract_paper_info(paper_url)
+        title = papers_title_list[j]
+        paper_found, original_url, description, publisher, conference, publication_date, authors, journal, cit_list = extract_paper_info(paper_url)
 
         if not paper_found:
             continue
@@ -141,5 +143,11 @@ for i in range(1):
             papers_info[title] = (paper_url, original_url, description, publisher, conference, publication_date, authors, journal, cit_list, [scholar_id])
 
 
-pp.pprint(professor_info)
-pp.pprint(papers_info)
+print(professor_info)
+print("\n")
+print(papers_info)
+
+# req = Request(url='https://scholar.google.com/citations?user=ZLpO3XQAAAAJ&hl=en', headers={'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:27.0) Gecko/20100101 Firefox/27.0'})
+# opener  = build_opener(HTTPCookieProcessor(MozillaCookieJar()))
+# hdl = opener.open(req)
+# html = hdl.read()
