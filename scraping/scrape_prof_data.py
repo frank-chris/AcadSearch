@@ -105,7 +105,7 @@ df = pd.read_csv('csrankings-0.csv')
 # change this file name
 professor_file = open('professor_data-0.csv', 'a+',newline ='')
 
-for i in range(0, len(df)):
+for i in range(1237, len(df)):
 
     scholar_id = df.iloc[i]['scholarid'] 
 
