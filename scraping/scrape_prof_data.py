@@ -103,7 +103,7 @@ def write_prof_data_to_csv(professor_file, professor_data_to_write):
 df = pd.read_csv('csrankings-0.csv')
 
 # change this file name
-professor_file = open('professor_data-0.csv', 'a+',newline ='')
+professor_file = open('professor_data-0-new.csv', 'a+',newline ='')
 
 for i in range(0, len(df)):
 
