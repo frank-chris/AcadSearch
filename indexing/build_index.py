@@ -44,9 +44,10 @@ def make_list_citations(initial_string):
     except:
         return []
 
-file_count = 1
+file_count = 10
 
-for file_index in range(file_count):                
+for file_index in range(file_count):    
+
     try:
         input_file = pd.read_csv('../scraping/professor_data-'+str(file_index)+'.csv',header=None,encoding='latin1')
     except:
