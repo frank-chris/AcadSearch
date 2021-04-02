@@ -1,47 +1,35 @@
 import csv
-import json
 import pandas as pd
-import nltk
-nltk.download('punkt')
-from nltk.tokenize import word_tokenize
 from nltk.stem import PorterStemmer
+from nltk.tokenize import word_tokenize
 import sys
-import re
-from nltk.corpus import stopwords
-from professor_mapping import get_file_index_and_prof_index, get_id
 
 try:    
-    output_file = open('full_index.csv','w',newline='',errors="ignore",encoding='latin1')
+    output_file = open('research_topic_index.csv','w',newline='',errors="ignore",encoding='latin1')
     output_writer = csv.writer(output_file)
 except:
     print("Error in opening output file.")
     sys.exit(0)
 
 
-stop_words = set(stopwords.words('english')) 
-full_index = dict()
+research_topic_index = dict()
 stemmer = PorterStemmer()
 
 def get_words(sentence_list):    
-    words = []
-    for sentence in sentence_list:                
-        tokenized_words = word_tokenize(re.sub(r'[^A-Za-z0-9]', ' ', sentence.lower()))
+    stemmed_words = []
+    for sentence in sentence_list:
+        tokenized_words = word_tokenize(sentence.lower())
         for word in tokenized_words:
-            stemmed_word = stemmer.stem(word)            
-            if stemmed_word not in stop_words:
-                words.append(stemmed_word)              
-    return words
+            stemmed_words.append(stemmer.stem(word))            
+    return stemmed_words
 
-
-def build_index(prof_id, name, affiliation, topics_list, papers_title_list):
-    
-    search_info_list = [name, affiliation] + topics_list + papers_title_list
-    words = get_words(search_info_list)
-    for position_index, key in zip(range(len(words)), words):
-        if key in full_index:
-            full_index[key].append((prof_id, position_index))
+def build_index_for_research_topic(topics_list, scholar_id):
+    stemmed_words = get_words(topics_list)
+    for key in stemmed_words:
+        if key in research_topic_index:
+            research_topic_index[key].append(scholar_id)
         else:
-            full_index[key] = [(prof_id, position_index)]
+            research_topic_index[key] = [scholar_id]
 
 def make_list(initial_string):
     return initial_string.lstrip('[\'').rstrip('\']').split('\', \'')
@@ -52,7 +40,7 @@ def make_list_citations(initial_string):
     except:
         return []
 
-file_count = 1
+file_count = 0
 
 for file_index in range(file_count):              
     try:
@@ -61,16 +49,14 @@ for file_index in range(file_count):
         print("Error in opening input file.")
         sys.exit(0)
 
-    number_of_professors = len(input_file)
-    
-    for prof_index in range(number_of_professors):    
+    for prof_index in range(len(input_file)):    
 
         scholar_id = input_file.iloc[prof_index][0]
         name = input_file.iloc[prof_index][1]
         image_url = input_file.iloc[prof_index][2]
         affiliation = input_file.iloc[prof_index][3]
         email = input_file.iloc[prof_index][4]
-        homepage = input_file.iloc[prof_index][5]
+        homepage = input_file.iloc[i][5]
         topics_list = make_list(input_file.iloc[prof_index][6])
         cit = int(input_file.iloc[prof_index][7])
         h_ind = int(input_file.iloc[prof_index][8])
@@ -82,9 +68,15 @@ for file_index in range(file_count):
         image_url = input_file.iloc[prof_index][14]
         papers_url_list = make_list(input_file.iloc[prof_index][15])
         papers_title_list = make_list(input_file.iloc[prof_index][16])    
-        prof_id = get_id(file_index, prof_index)
 
-        build_index(prof_id, name, affiliation, topics_list, papers_title_list)        
+        build_index_for_research_topic(topics_list, scholar_id)        
 
-with open('full_index.json', 'w') as outfile:
-    json.dump(full_index, outfile)
+
+count = 0
+sum_len = 0
+for key in research_topic_index:            
+    sum_len =  sum_len + len(research_topic_index[key])
+    count = count + 1    
+    output_writer.writerow((key,research_topic_index[key]))  
+
+print("Average Posting Length = "+str(sum_len/count)) 
