@@ -14,23 +14,28 @@ stop_words = set(stopwords.words('english'))
 full_index = dict()
 stemmer = PorterStemmer()
 
-def get_words(sentence_list):    
+def get_words(sentence_list):      
     words = []
-    for sentence in sentence_list:                
-        tokenized_words = word_tokenize(re.sub(r'[^A-Za-z0-9]', ' ', sentence.lower()))
-        for word in tokenized_words:
-            stemmed_word = stemmer.stem(word)            
-            if stemmed_word not in stop_words:
-                words.append(stemmed_word)              
+    for sentence in sentence_list:   
+        try:                   
+            tokenized_words = word_tokenize(re.sub(r'[^A-Za-z0-9]', ' ', sentence.lower()))
+            for word in tokenized_words:
+                stemmed_word = stemmer.stem(word)            
+                if stemmed_word not in stop_words:
+                    words.append(stemmed_word)              
+        except:
+            continue
     return words
 
 
 def build_index(prof_id, name, affiliation, topics_list, papers_title_list):
     
-    search_info_list = [name, affiliation] + topics_list + papers_title_list
+    search_info_list = [name, affiliation] + topics_list + papers_title_list    
     words = get_words(search_info_list)
+    print(words)
+    sys.exit(0)
     for position_index, key in zip(range(len(words)), words):
-        if key in full_index:
+        if key in full_index:            
             full_index[key].append((prof_id, position_index))
         else:
             full_index[key] = [(prof_id, position_index)]
@@ -77,7 +82,9 @@ for file_index in range(file_count):
         papers_title_list = make_list(input_file.iloc[prof_index][16])    
         prof_id = get_id(file_index, prof_index)
 
-        build_index(prof_id, name, affiliation, topics_list, papers_title_list)        
+        build_index(prof_id, name, affiliation, topics_list, papers_title_list)         
 
-with open('full_index.json', 'w+',encoding='utf8') as outfile:
+print("Number of keywords - "+str(len(full_index)))
+
+with open('full_index_new.json', 'w+',encoding='utf8') as outfile:
     json.dump(full_index, outfile)
