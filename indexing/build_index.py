@@ -44,12 +44,12 @@ def make_list_citations(initial_string):
     except:
         return []
 
-file_count = 10
+file_count = 1
 
 for file_index in range(file_count):    
 
     try:
-        input_file = pd.read_csv('../scraping/professor_data-'+str(file_index)+'.csv',header=None,encoding='latin1')
+        input_file = pd.read_csv('../cleaning/professor_data-'+str(file_index)+'-cleaned.csv',header=None,encoding='utf8')
     except:
         print("Error in opening input file.")
         sys.exit(0)
@@ -79,5 +79,5 @@ for file_index in range(file_count):
 
         build_index(prof_id, name, affiliation, topics_list, papers_title_list)        
 
-with open('full_index.json', 'w') as outfile:
+with open('full_index.json', 'w+',encoding='utf8') as outfile:
     json.dump(full_index, outfile)
