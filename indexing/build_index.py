@@ -10,14 +10,6 @@ import re
 from nltk.corpus import stopwords
 from professor_mapping import get_file_index_and_prof_index, get_id
 
-try:    
-    output_file = open('full_index.csv','w',newline='',errors="ignore",encoding='latin1')
-    output_writer = csv.writer(output_file)
-except:
-    print("Error in opening output file.")
-    sys.exit(0)
-
-
 stop_words = set(stopwords.words('english')) 
 full_index = dict()
 stemmer = PorterStemmer()
@@ -54,7 +46,7 @@ def make_list_citations(initial_string):
 
 file_count = 1
 
-for file_index in range(file_count):              
+for file_index in range(file_count):                
     try:
         input_file = pd.read_csv('../scraping/professor_data-'+str(file_index)+'.csv',header=None,encoding='latin1')
     except:
