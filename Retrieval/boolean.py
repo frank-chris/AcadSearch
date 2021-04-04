@@ -17,16 +17,17 @@ def merge(list1, list2, req_dist = None):
     ptr2 = 0
     docs = []
 
+
     while ptr1 < len(list1) and ptr2 < len(list2):
         if(list1[ptr1][0] == list2[ptr2][0]):
             if req_dist == None:
-                docs.append(list1[ptr1][0])
+                docs.append(list1[ptr1])
                 ptr1 += 1
                 ptr2 += 1
             else:
                 actual_dist = list2[ptr2][1] - list1[ptr1][1]
                 if actual_dist == req_dist:
-                    docs.append(list1[ptr1][0])
+                    docs.append(list1[ptr1])
                     ptr1 += 1
                     ptr2 += 1
                 elif actual_dist > req_dist: # This means we need to decrease the actual_dist, or increment the first pointer
@@ -38,7 +39,8 @@ def merge(list1, list2, req_dist = None):
         elif list1[ptr1][0] > list2[ptr2][0]:
             ptr2 += 1
 
-    return sorted(list(set(docs)))
+    return docs
+
 
 def boolean_retrieval(query):
     '''
@@ -62,8 +64,16 @@ def boolean_retrieval(query):
     if len(new_docs_list) != 1:
         for i in range(1, len(new_docs_list)):
             final_list = merge(final_list, new_docs_list[i])
-    return final_list
+    
+    final_docs = []
+    for i in range(len(final_list)):
+        if i != 0:
+            if final_list[i][0] != final_docs[-1]:
+                final_docs.append(final_list[i][0])
+        else:
+            final_docs.append(final_list[0][0]) 
 
+    return final_docs
 
 def phrase_retr(phrase):
     '''
@@ -75,6 +85,7 @@ def phrase_retr(phrase):
 
     # Repeat words in a phrase not handled
     ctr = 0
+    word_pos = dict()
     for word in parsed_phrase:
         word_pos[word] = ctr
         ctr += 1
@@ -85,18 +96,24 @@ def phrase_retr(phrase):
     # For efficiency, sort lists by their sizes, then merge
     sort_by_len = np.argsort(len_list)
     new_docs_list = [None] * len(docs_list)
-    new_word_pos = [None] * len(word_pos)
     for i in range(len(docs_list)):
         new_docs_list[i] = docs_list[sort_by_len[i]]
-        new_word_pos[i] = word_pos[sort_by_len[i]]
 
     final_list = new_docs_list[0]
     if len(new_docs_list) != 1:
         for i in range(1, len(new_docs_list)):
-            distance = new_word_pos[i] - new_word_pos[0]
+            distance = sort_by_len[i] - sort_by_len[0]
             final_list = merge(final_list, new_docs_list[i], distance)
-    return final_list
 
+    final_docs = []
+    for i in range(len(final_list)):
+        if i != 0:
+            if final_list[i][0] != final_docs[-1]:
+                final_docs.append(final_list[i][0])
+        else:
+            final_docs.append(final_list[0][0]) 
+            
+    return final_docs
 
 # Comment out this line if needed
 query = input()
