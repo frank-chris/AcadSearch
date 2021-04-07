@@ -1,10 +1,20 @@
 import time
 import json
-with open('../indexing/full_index.json', 'r') as f:
+
+def get_file_index_and_prof_index(id):
+    file_index = id//5000
+    prof_index = id%5000
+    return (file_index, prof_index)
+
+s = time.time()
+with open('../../full_index_new.json', 'r') as f:
     x = json.load(f)
-    start = time.time()
-    if 'machin' in x:  
-        print(len(x['machin']))
+    e = time.time()
+    print(e - s)
+    s = e
+    if 'neeldhara' in x:  
+        for y in x['neeldhara']:
+            print(get_file_index_and_prof_index(y[0]), y[1])
 
 end = time.time()
-print(end - start)
+print(end - s)

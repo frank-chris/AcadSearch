@@ -1,11 +1,16 @@
 import numpy as np
 import json
 import sys
-query_path = "../querying/"
-# Insert query_path at position 1
-sys.path.insert(1, query_path)
+from parse_query import *
+sys.path.append('../indexing/')
+from professor_mapping import *
 
-import parse_query.py
+
+#json_file = "../indexing/full_index.json"
+json_file = "../indexing/partial_index.json"
+with open(json_file) as f:
+    documents_containing_word = json.load(f)
+
 
 def merge(list1, list2, req_dist = None):
     '''
@@ -49,10 +54,18 @@ def boolean_retrieval(query):
     Perform a merge wherever two documents are the same
     Also, in Boolean Retrieval, ignore the values of the key, that is, the second value in each tuple
     '''
-    parsed_query = parse_query(query)
-
-    docs_list = [documents_containing_word[word] for word in parsed_query]
+    parsed_query = query_parser(query)
+    docs_list = []
+    for word in parsed_query:
+        if word in documents_containing_word:
+            docs_list.append(documents_containing_word[word])
+        else:
+            docs_list.append([])    
     len_list = [len(docs_with_word) for docs_with_word in docs_list]
+
+    # Handle the case when no match
+    if len(docs_list) == 0:
+        return []
 
     # For efficiency, sort lists by their sizes, then merge
     sort_by_len = np.argsort(len_list)
@@ -81,7 +94,7 @@ def phrase_retr(phrase):
     Sort them in the order of their lengths
     Perform a merge wherever two documents are the same, and their positions in the given document have the required distance
     '''
-    parsed_phrase = parse_query(phrase)
+    parsed_phrase = query_parser(phrase)    
 
     # Repeat words in a phrase not handled
     ctr = 0
@@ -89,9 +102,18 @@ def phrase_retr(phrase):
     for word in parsed_phrase:
         word_pos[word] = ctr
         ctr += 1
-
-    docs_list = [documents_containing_word[word] for word in parsed_phrase]
+    
+    docs_list = []
+    for word in parsed_phrase:
+        if word in documents_containing_word:
+            docs_list.append(documents_containing_word[word])
+        else:
+            docs_list.append([])    
     len_list = [len(docs_with_word) for docs_with_word in docs_list]
+
+    # Handle the case when no match
+    if len(docs_list) == 0:
+        return []
 
     # For efficiency, sort lists by their sizes, then merge
     sort_by_len = np.argsort(len_list)
@@ -116,16 +138,7 @@ def phrase_retr(phrase):
     return final_docs
 
 # Comment out this line if needed
-query = input()
-
-# Open the full file
-#json_file = "../indexing/full_index.json"
-json_file = "../indexing/partial_index.json"
-with open(json_file) as f:
-    documents_containing_word = json.load(f)
-# Should call this as few times(once) as possible, think about some optimisation
-# Something like ifndef in C, the json file should be loaded only once
-
-# The list of all documents corresponding to any word can be found by this
-words = [word for word in documents_containing_word.keys()]
-
+print("Write queries")
+while(True):
+    query = input()
+    print(len(boolean_retrieval(query)))
