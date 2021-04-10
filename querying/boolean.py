@@ -44,46 +44,69 @@ def merge(list1, list2, req_dist = None):
 
     return docs
 
-
-def boolean_retrieval(query):
+def boolean_retrieval(query, AND = True):
     '''
     Obtain the postings lists of the words in the phrase
     Sort them in the order of their lengths
     Perform a merge wherever two documents are the same
     Also, in Boolean Retrieval, ignore the values of the key, that is, the second value in each tuple
     '''
-    parsed_query = query_parser(query)
+    parsed_query = query_parser(query)    
     docs_list = []
     for word in parsed_query:
         if word in documents_containing_word:
             docs_list.append(documents_containing_word[word])
         else:
             docs_list.append([])    
-    len_list = [len(docs_with_word) for docs_with_word in docs_list]
 
-    # Handle the case when no match
-    if len(docs_list) == 0:
-        return []
-
-    # For efficiency, sort lists by their sizes, then merge
-    sort_by_len = np.argsort(len_list)
-    new_docs_list = [None] * len(docs_list)
-    for i in range(len(docs_list)):
-        new_docs_list[i] = docs_list[sort_by_len[i]]
-
-    final_list = new_docs_list[0]
-    if len(new_docs_list) != 1:
-        for i in range(1, len(new_docs_list)):
-            final_list = merge(final_list, new_docs_list[i])
-    
     final_docs = []
-    for i in range(len(final_list)):
-        if i != 0:
-            if final_list[i][0] != final_docs[-1]:
-                final_docs.append(final_list[i][0])
-        else:
-            final_docs.append(final_list[0][0]) 
+    if AND:
+        len_list = [len(docs_with_word) for docs_with_word in docs_list]
 
+        # Handle the case when no match
+        if len(docs_list) == 0:
+            return []
+
+        # For efficiency, sort lists by their sizes, then merge
+        sort_by_len = np.argsort(len_list)
+        new_docs_list = [None] * len(docs_list)
+        for i in range(len(docs_list)):
+            new_docs_list[i] = docs_list[sort_by_len[i]]
+
+        final_list = new_docs_list[0]
+        if len(new_docs_list) != 1:
+            for i in range(1, len(new_docs_list)):
+                final_list = merge(final_list, new_docs_list[i])
+        
+        for i in range(len(final_list)):
+            if i != 0:
+                if final_list[i][0] != final_docs[-1]:
+                    final_docs.append(final_list[i][0])
+            else:
+                final_docs.append(final_list[0][0]) 
+
+    
+    # OR operation
+    else:
+        doc_freq = dict() # Doc : Cumulative frequency
+        doc_words = dict() # Doc : Set of all query words that appear in it
+        for i, postings_list in zip(range(len(docs_list)), docs_list):
+            for doc in postings_list:
+                doc_id = doc[0]
+                if doc_id not in doc_freq:
+                    doc_words[doc_id] = set()
+                    doc_freq[doc_id] = 0
+                doc_words[doc_id].add(i)
+                doc_freq[doc_id] += 1
+
+        for doc_id in doc_freq.keys():
+            final_docs.append((doc_id, (len(doc_words[doc_id]), doc_freq[doc_id])))
+        final_docs = sorted(final_docs, key = lambda x : x[1], reverse = True)
+
+        # We return only the document ids, however we return them in order
+        for i in range(len(final_docs)):
+            final_docs[i] = final_docs[i][0]
+            
     return final_docs
 
 def phrase_retr(phrase):
