@@ -13,16 +13,16 @@
   <body style="background-color: #F8F9FA;font-size:12pt;font-family: 'Roboto', sans-serif;">
     <nav class="navbar fixed-top navbar-light bg-dark">
         
-        <div class="container" >
+        <div class="container">
             <div class="row" style="width: 100%;">                
                 <div class="col-md-8">                                
-                    <form class="form-inline" style="">                                                            
+                    <form class="form-inline" style="margin-top:7px;margin-bottom:7px;">                                                            
                         <div class="row" style="width: 100%;margin:0">
                             <div class="col-md-9" style="padding:0">
-                                <input type="text" class="form-control"  style="width:100%;" name="query" placeholder="What are you looking for?">
+                                <input value="{{search_query}}" type="text" class="form-control"  style="width:100%;border-radius:10px 0px 0px 10px;" name="query" placeholder="Search Professors by Name, Area of Working or Past Papers...">
                             </div>
-                            <div class="col-md-3" style="padding-right:0;">
-                                <button type="submit" class="btn btn-primary" style="width:100%;"> <i class="fa fa-search"></i> Search</button>
+                            <div class="col-md-3" style="padding:0;">
+                                <button type="submit" class="btn btn-primary" style="width:100%;border-radius:0px 10px 10px 0px;"> <i class="fa fa-search"></i> Search</button>
                             </div>
                         </div> 
                     </form>   
@@ -42,44 +42,48 @@
                 
 
                 {% if prof_data|length > 0 %}
-                <br><center>Found <b>{{ prof_data|length }} </b> results in <b>{{time_taken}}</b> seconds      </center>
-                {% endif %}     
 
-                {% for prof in prof_data %}
-                    <br>
-                    <div id="accordion">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">                                
-                                    <div class="col-md-2">
-                                        <img src="{{prof.image_url}}" style="width:100px;height:100px;border-radius: 100%;">
+                <br><br><center>Found <b>{{ prof_data|length }} </b> results in <b>{{time_taken}}</b>s  <br><br>    </center>
+                
+                
+                
+                <div class="list-group" >
 
-                                    </div>                        
-                                    <div class="col-md-10">
-                                        <h5 style="padding:0;margin:0;"><b>{{prof.name}}</b></h5>                                                                                                            
-                                        {{prof.affiliation}}<br>
-                  
-                                            {% for topic in prof.topics_list %}
-                                                {% if (topic | length) > 0 %}
-                                                   <span class="badge badge-light"> {{topic}} </span>                                                  
-                                                {%  endif %}
-                                            {% endfor %}
-                  
-                                        <br>                             
-                                        <a href="https://{{prof.email}}"> {{prof.email}} </a>
-                                    </div>                                   
-                                </div>            
-                                <br>                
-                                <center>
-                                    <a class="btn btn-primary btn-sm" href="{{prof.homepage}}">   Homepage</a>      
-                                    <a class="btn btn-info btn-sm" href="https://scholar.google.com/citations?user={{prof.scholar_id}}&pagesize=100">Google Scholar Page</a>                          
-                                    <button class="btn btn-light btn-sm" onclick="load_citation_info({{loop.index0}})">   Load Citation Info  </button>
-                                    <button class="btn btn-success btn-sm" onclick="load_paper_info({{loop.index0}})" data-toggle="modal" data-target="#paper_info_modal">  See Papers </button>                                    
-                                </center>                                        
-                            </div>                                                                                                        
-                        </div>
-                    </div>  
-                {% endfor %}                 
+                    {% for prof in prof_data %}
+
+                    <div class="list-group-item list-group-item-action">
+                        <div class="row">                                
+                            <div class="col-md-2">
+                                <img src="{{prof.image_url}}" style="width:100px;height:100px;border-radius: 100%;">
+
+                            </div>                        
+                            <div class="col-md-10">
+                                <h5 style="padding:0;margin:0;"><b>{{prof.name}}</b></h5>                                                                                                            
+                                {{prof.affiliation}}<br>
+        
+                                <div class="text-muted" style="font-size:10pt;">
+                                    {% for topic in prof.topics_list %}
+                                        {% if (topic | length) > 0 %}
+                                          {{topic}}{% if loop.index0 < ((prof.topics_list | length) - 1) %} | {% endif %}                                 
+                                        {%  endif %}
+                                    {% endfor %}
+                                </div>                                                         
+                                <a href="https://{{prof.email}}"> {{prof.email}} </a>
+                            </div>                                   
+                        </div>            
+                        <br>                
+                        <center>
+                            <a class="btn btn-light btn-sm" href="{{prof.homepage}}">   Homepage</a>      
+                            <a class="btn btn-light btn-sm" href="https://scholar.google.com/citations?user={{prof.scholar_id}}&pagesize=100">Google Scholar Page</a>                          
+                            <button class="btn btn-light btn-sm" onclick="load_citation_info({{loop.index0}})">   Load Citation Info  </button>
+                            <button class="btn btn-light btn-sm" onclick="load_paper_info({{loop.index0}})" data-toggle="modal" data-target="#paper_info_modal">  See Papers </button>                                    
+                        </center> 
+                    </div>
+
+                    {% endfor %}
+                </div>
+
+                {% endif %}  
                                                                 
             </div>
             <div class="col-md-4" style="width: 100%;">
@@ -127,6 +131,8 @@
         
         $('#citation_data_outer').css({opacity:'0'}); 
 
+
+
         /* References for chart.js - https://www.chartjs.org/docs */
         var ctx = document.getElementById('chart').getContext('2d');       
         var chart = new Chart(ctx, {            
@@ -169,16 +175,15 @@
         }
 
         function get_paper_html(prof_index){
-            var to_return = '';
+            var html = '';
             for(var paper_index in prof_data[prof_index].papers_title_list) {
                 console.log(paper_index);                
                 var paper_title = prof_data[prof_index].papers_title_list[paper_index];
                 var paper_url = prof_data[prof_index].papers_url_list[paper_index];
-                to_return = to_return + '<a href="'+paper_url+'" class="list-group-item list-group-item-action">'+paper_title+'</a>';
-            }
-            console.log(to_return);            
-            return to_return;
-        }
+                html = html + '<a href="'+paper_url+'" class="list-group-item list-group-item-action">'+paper_title+'</a>';
+            }                       
+            return html;
+        }       
                  
     </script>
     {% endblock %}
