@@ -4,6 +4,7 @@ from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from spellchecker import SpellChecker
+import re
 
 spell = SpellChecker()
 stemmer = PorterStemmer()
@@ -20,7 +21,7 @@ def query_parser(query):
     > parsed_query - a list of words obtained by parsing the query
     '''
     parsed_query = []
-    words_list = word_tokenize(query.lower())
+    words_list = word_tokenize(re.sub(r'[^A-Za-z0-9]', ' ', query.lower()))
 
     for word in words_list:
         stemmed_word = stemmer.stem(word)
