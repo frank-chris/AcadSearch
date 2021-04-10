@@ -1,15 +1,27 @@
+import time
+from processing import read_prof_information
 from flask import Flask, render_template, request, redirect
 app = Flask(__name__)
 app.debug = True
 
-@app.route('/', methods=['GET','POST'])
-def search():    
-    doc_ids = dict()  
-    try:
-        search_query = str(request.args['query']) 
-    except:
-        search_query = ''    
-    
-    doc_ids = {'0':1000, '1':2000}
+def get_doc_id_from_tf_idf(query):
+    return [i for i in range(100)]
 
-    return render_template('index.html',doc_ids=doc_ids)  
+@app.route('/', methods=['GET','POST'])
+def search():  
+    start_time = time.time()
+    prof_data = []
+    try:
+        search_query = str(request.args['query'])         
+    except:
+        search_query = ''   
+
+    if search_query == '':
+        return render_template('index.html',prof_data=prof_data,time_taken = round(time.time() - start_time, 4))  
+    
+    prof_ids = get_doc_id_from_tf_idf(search_query)
+
+    for prof_id in prof_ids:    
+        prof_data.append(read_prof_information(prof_id))
+
+    return render_template('index.html',prof_data=prof_data,time_taken = round(time.time() - start_time, 4)) 

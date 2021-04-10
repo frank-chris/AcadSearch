@@ -4,120 +4,183 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <title>Search Engine</title>    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>   
   </head>
-  <body style="background-color: #F8F9FA;">
+  <body style="background-color: #F8F9FA;font-size:12pt;font-family: 'Roboto', sans-serif;">
     <nav class="navbar fixed-top navbar-light bg-dark">
-        <div class="container">
-            <div class="row" style="width: 100%;">
-                <div class="col-md-1"></div>
-                <div class="col-md-10" style="padding-right: 0;">                                
-                    <form class="form-inline" style="padding:0;margin:0">                                                            
+        
+        <div class="container" >
+            <div class="row" style="width: 100%;">                
+                <div class="col-md-8">                                
+                    <form class="form-inline" style="">                                                            
                         <div class="row" style="width: 100%;margin:0">
                             <div class="col-md-9" style="padding:0">
                                 <input type="text" class="form-control"  style="width:100%;" name="query" placeholder="What are you looking for?">
                             </div>
                             <div class="col-md-3" style="padding-right:0;">
-                                <button type="submit" class="btn btn-primary" style="width:100%;">Search</button>
+                                <button type="submit" class="btn btn-primary" style="width:100%;"> <i class="fa fa-search"></i> Search</button>
                             </div>
                         </div> 
                     </form>   
                 </div>
-                <div class="col-md-1"></div>
-            </div>
-        </div>        
+                <div class="col-md-4">
+                    filter | x | y | type
+                </div>
+            </div>        
+        </div>              
     </nav>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-md-10">                
+    <div class="container" >
+        <div class="row">            
+            <div class="col-md-8">                
                 
                 <br> <br>
                 
                 
 
-                {% if doc_ids|length > 0 %}
-                <br><center>Found {{ doc_ids|length }} results       </center>
-                {% endif %}                      
+                {% if prof_data|length > 0 %}
+                <br><center>Found <b>{{ prof_data|length }} </b> results in <b>{{time_taken}}</b> seconds      </center>
+                {% endif %}     
 
-                <br>
-                <div id="accordion">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="row">                                
-                                <div class="col-md-2">
-                                    <img src="https://scholar.googleusercontent.com/citations?view_op=view_photo&user=lPM8k54AAAAJ&citpid=2" style="width:100%;border-radius: 100%;">
-
-                                </div>                        
-                                <div class="col-md-6">
-                                    <h5>Gerti Kappel </h5>
-                                    Full Professor for Business Informatics<br>                                                                        
-                                    Vienna University of Technology<br>
-                                    <span class="badge badge-dark">Web Engineering</span>
-                                    <span class="badge badge-dark">Process Engineering</span>
-                                    <span class="badge badge-dark">Model Engineering</span>
-                                    <span class="badge badge-dark">Object-oriented Modeling</span>       
-                                    <br>                             
-                                    Email: big.tuwien.ac.at
-                                </div>
-                                <div class="col-md-4">                                                              
-                                    <table class="table table-striped">                                        
-                                        <tbody>
-                                            <thead>
-                                            <tr>
-                                                <th scope="col" style="padding-top:1px;padding-bottom:1px;"></th>
-                                                <th scope="col" style="padding-top:1px;padding-bottom:1px;">Total</th>
-                                                <th scope="col" style="padding-top:1px;padding-bottom:1px;">Past 5 Years</th>                                                
-                                            </tr>
-                                            </thead>
-                                          <tr>
-                                            <th scope="row" style="padding-top:1px;padding-bottom:1px;">Citations</th>
-                                            <td style="padding-top:1px;padding-bottom:1px;">1021</td>
-                                            <td style="padding-top:1px;padding-bottom:1px;">1000</td>                                            
-                                          </tr>
-                                          <tr>
-                                            <th scope="row" style="padding-top:1px;padding-bottom:1px;">H-Index</th>
-                                            <td style="padding-top:1px;padding-bottom:1px;">99</td>
-                                            <td style="padding-top:1px;padding-bottom:1px;">8</td>                                             
-                                          </tr>          
-                                          <tr>
-                                            <th scope="row" style="padding-top:1px;padding-bottom:1px;">I-Index</th>
-                                            <td style="padding-top:1px;padding-bottom:1px;">98</td>
-                                            <td style="padding-top:1px;padding-bottom:1px;">0</td>                                          
-                                          </tr>                                          
-                                        </tbody>
-                                      </table>
-                                      <center><a href="#">Homepage</a> | <a href="#">Google Scholar Page</a></center>
-                                </div>
-                            </div>
-                            <br>
-                            <center>
-                            <button class="btn btn-light btn-sm" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">                                    
-                                See Papers and Citations Per Year
-                            </button>
-                            </center>
-                        </div>                        
-
-                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                {% for prof in prof_data %}
+                    <br>
+                    <div id="accordion">
+                        <div class="card">
                             <div class="card-body">
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><a href="#">Cras justo odio</a></li>
-                                    <li class="list-group-item"><a href="#">Dapibus ac facilisis in</a></li>
-                                    <li class="list-group-item"><a href="#">Morbi leo risus</a></li>
-                                    <li class="list-group-item"><a href="#">Porta ac consectetur ac</a></li>
-                                    <li class="list-group-item"><a href="#">Vestibulum at eros</a></li>
-                                  </ul>
-                            </div>
+                                <div class="row">                                
+                                    <div class="col-md-2">
+                                        <img src="{{prof.image_url}}" style="width:100px;height:100px;border-radius: 100%;">
+
+                                    </div>                        
+                                    <div class="col-md-10">
+                                        <h5 style="padding:0;margin:0;"><b>{{prof.name}}</b></h5>                                                                                                            
+                                        {{prof.affiliation}}<br>
+                  
+                                            {% for topic in prof.topics_list %}
+                                                {% if (topic | length) > 0 %}
+                                                   <span class="badge badge-light"> {{topic}} </span>                                                  
+                                                {%  endif %}
+                                            {% endfor %}
+                  
+                                        <br>                             
+                                        <a href="https://{{prof.email}}"> {{prof.email}} </a>
+                                    </div>                                   
+                                </div>            
+                                <br>                
+                                <center>
+                                    <a class="btn btn-primary btn-sm" href="{{prof.homepage}}">   Homepage</a>      
+                                    <a class="btn btn-info btn-sm" href="https://scholar.google.com/citations?user={{prof.scholar_id}}&pagesize=100">Google Scholar Page</a>                          
+                                    <button class="btn btn-light btn-sm" onclick="load_citation_info({{loop.index0}})">   Load Citation Info  </button>
+                                    <button class="btn btn-success btn-sm" onclick="load_paper_info({{loop.index0}})" data-toggle="modal" data-target="#paper_info_modal">  See Papers </button>                                    
+                                </center>                                        
+                            </div>                                                                                                        
                         </div>
-                    </div>
-                </div>                                                  
+                    </div>  
+                {% endfor %}                 
+                                                                
             </div>
-            <div class="col-md-1"></div>
+            <div class="col-md-4" style="width: 100%;">
+                <br><br><br>
+                <center>
+                
+                <br><br>                
+                <div class="card" id="citation_data_outer" style="position:fixed;">
+                    
+                    <div class="card-body">                                                
+                        <div id="cit_data_div"></div>
+                        <div class="chart_div"><canvas id="chart" width="370px !important"></canvas></div>                        
+                    </div>
+                </div>
+                </center>
+            </div>
         </div>        
     </div>
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <div class="modal fade" id="paper_info_modal" tabindex="-1" role="dialog" aria-labelledby="paper_info_modal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paper_info_modal">Paper Information</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>                
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
   </body>
+    {% block javascript %}
+    <script>
+        var prof_data =  {{prof_data|tojson}};  
+        
+        $('#citation_data_outer').css({opacity:'0'}); 
+
+        /* References for chart.js - https://www.chartjs.org/docs */
+        var ctx = document.getElementById('chart').getContext('2d');       
+        var chart = new Chart(ctx, {            
+            type: 'bar',            
+            data: {
+                labels: ['2021'],
+                datasets: [{
+                    label: "Citations in Past Years",
+                    backgroundColor: '#563D7C',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [5],                    
+                }]
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+                                                        
+        function load_citation_info(prof_index){
+            $('#citation_data_outer').css({opacity:1});  
+            $('#cit_data_div').html('<table class="table table-striped">  <tbody><thead><tr><th scope="col" style="padding-top:1px;padding-bottom:1px;"></th><th scope="col" style="padding-top:1px;padding-bottom:1px;">Total</th><th scope="col" style="padding-top:1px;padding-bottom:1px;">Past 5 Years</th>                                                </tr></thead><tr><th scope="row" style="padding-top:1px;padding-bottom:1px;">Citations</th><td style="padding-top:1px;padding-bottom:1px;">'+prof_data[prof_index].cit+'</td><td style="padding-top:1px;padding-bottom:1px;">'+prof_data[prof_index].cit5+'</td>                                            </tr><tr><th scope="row" style="padding-top:1px;padding-bottom:1px;">H-Index</th><td style="padding-top:1px;padding-bottom:1px;">'+prof_data[prof_index].h_ind+'</td><td style="padding-top:1px;padding-bottom:1px;">'+prof_data[prof_index].h_ind5+'</td>                                             </tr>          <tr><th scope="row" style="padding-top:1px;padding-bottom:1px;">I-Index</th><td style="padding-top:1px;padding-bottom:1px;">'+prof_data[prof_index].i_ind+'</td><td style="padding-top:1px;padding-bottom:1px;">'+prof_data[prof_index].i_ind5+'</td>                                          </tr>                                          </tbody></table>');
+
+            var year_data_length = prof_data[prof_index].cit_list.length;
+
+            var labels = [];
+            var counter = 0;
+            for(var year = 2021 - year_data_length + 1; year <= 2021 ; year = year + 1) {                
+                labels.push(year.toString());                
+            }                        
+
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = prof_data[prof_index].cit_list;
+            chart.update();
+
+            
+        } 
+
+        function load_paper_info(prof_index) {
+            $('.modal-body').html('<div class="list-group">'+get_paper_html(prof_index)+'</div>');
+        }
+
+        function get_paper_html(prof_index){
+            var to_return = '';
+            for(var paper_index in prof_data[prof_index].papers_title_list) {
+                console.log(paper_index);                
+                var paper_title = prof_data[prof_index].papers_title_list[paper_index];
+                var paper_url = prof_data[prof_index].papers_url_list[paper_index];
+                to_return = to_return + '<a href="'+paper_url+'" class="list-group-item list-group-item-action">'+paper_title+'</a>';
+            }
+            console.log(to_return);            
+            return to_return;
+        }
+                 
+    </script>
+    {% endblock %}
+
 </html>

@@ -16,15 +16,12 @@ def make_list_citations(initial_string):
     except:
         return []
 
-start_time = time.time()
-
 file_count = 10
-
-doc_id_list = [501, 99, 100, 101, 5015, 10081, 45010]
 
 data_files = [pd.read_csv('../cleaning/professor_data-'+str(file_index)+'-cleaned.csv',header=None,encoding='utf8') for file_index in range(file_count) ]
 
-def read_prof_information(prof_id):    
+def read_prof_information(prof_id):   
+
     file_index, prof_index = get_file_index_and_prof_index(prof_id)
 
     data_dict_to_return = dict()    
@@ -48,9 +45,3 @@ def read_prof_information(prof_id):
     data_dict_to_return['papers_title_list'] = make_list(data_files[file_index].iloc[prof_index][16])    
 
     return data_dict_to_return
-
-print("Loaded all files. Took "+str(time.time() - start_time)+" seconds.")
-
-for prof_id in doc_id_list:
-    prof_data = read_prof_information(prof_id)
-    print(prof_data)    
