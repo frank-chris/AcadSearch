@@ -2,8 +2,6 @@ import numpy as np
 import json
 import sys
 from parse_query import *
-sys.path.append('../indexing/')
-from professor_mapping import *
 
 
 #json_file = "../indexing/full_index.json"

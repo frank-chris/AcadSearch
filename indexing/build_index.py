@@ -8,7 +8,8 @@ from nltk.stem import PorterStemmer
 import sys
 import re
 from nltk.corpus import stopwords
-from professor_mapping import get_file_index_and_prof_index, get_id
+sys.path.append('../helper_functions/')
+from common_functions import get_id
 
 stop_words = set(stopwords.words('english')) 
 full_index = dict()
@@ -47,7 +48,7 @@ def make_list_citations(initial_string):
     except:
         return []
 
-file_count = 10
+file_count = 1
 
 for file_index in range(file_count):    
 
@@ -84,5 +85,5 @@ for file_index in range(file_count):
 
 print("Number of keywords - "+str(len(full_index)))
 
-with open('full_index_new.json', 'w+',encoding='utf8') as outfile:
+with open('full_index_newx.json', 'w+',encoding='utf8') as outfile:
     json.dump(full_index, outfile)
