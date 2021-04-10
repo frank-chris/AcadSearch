@@ -51,7 +51,7 @@ def boolean_retrieval(query, AND = True):
     Perform a merge wherever two documents are the same
     Also, in Boolean Retrieval, ignore the values of the key, that is, the second value in each tuple
     '''
-    parsed_query = query
+    parsed_query = query_parser(query)    
     docs_list = []
     for word in parsed_query:
         if word in documents_containing_word:
@@ -88,16 +88,19 @@ def boolean_retrieval(query, AND = True):
     
     # OR operation
     else:
-        doc_freq = dict()
-        for postings_list in docs_list:
+        doc_freq = dict() # Doc : Cumulative frequency
+        doc_words = dict() # Doc : Set of all query words that appear in it
+        for i, postings_list in zip(range(len(docs_list)), docs_list):
             for doc in postings_list:
-                if doc[0] not in doc_freq:
-                    doc_freq[doc[0]] = 1
-                else:
-                    doc_freq[doc[0]] += 1
+                doc_id = doc[0]
+                if doc_id not in doc_freq:
+                    doc_words[doc_id] = set()
+                    doc_freq[doc_id] = 0
+                doc_words[doc_id].add(i)
+                doc_freq[doc_id] += 1
 
         for doc_id in doc_freq.keys():
-            final_docs.append((doc_id, doc_freq[doc_id]))
+            final_docs.append((doc_id, (len(doc_words[doc_id]), doc_freq[doc_id])))
         final_docs = sorted(final_docs, key = lambda x : x[1], reverse = True)
 
         # We return only the document ids, however we return them in order
