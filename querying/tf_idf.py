@@ -8,6 +8,9 @@ sys.path.append('../helper_functions/')
 from common_functions import get_id
 from parse_query import query_parser
 
+with open('../querying/tf_idf_scores.json') as f:
+    tf_idf_score = json.load(f)
+
 def compute_tf_idf_score():
     with open('../indexing/partial_index.json') as f:
         data = json.load(f)
@@ -61,16 +64,14 @@ def compute_tf_idf_score():
 
 
 
-def get_tf_idf_list(query, n):
-    parsed_query = query_parser(query)
-
-    docs_dict = {}
-
-    with open('tf_idf_scores.json') as f:
-        tf_idf_score = json.load(f)
+def get_tf_idf_list(query, n=9999999):
+    global tf_idf_score
+    parsed_query = query_parser(query)    
+    docs_dict = {}        
 
     for key in tf_idf_score.keys():
         term, doc = key.split('_')
+        doc = int(doc)
         if term in parsed_query:
             if doc not in docs_dict:
                 docs_dict[doc] = tf_idf_score[key]
@@ -82,5 +83,8 @@ def get_tf_idf_list(query, n):
         docs_list.append([doc, score])
 
     docs_list.sort(key = lambda x: x[1], reverse=True)
+
+    for i in range(len(docs_list)):
+        docs_list[i] = docs_list[i][0]
 
     return docs_list[:n]

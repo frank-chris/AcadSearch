@@ -157,9 +157,3 @@ def phrase_retr(phrase):
             final_docs.append(final_list[0][0]) 
             
     return final_docs
-
-# Comment out this line if needed
-print("Write queries")
-while(True):
-    query = input()
-    print(len(boolean_retrieval(query)))

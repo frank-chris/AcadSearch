@@ -5,6 +5,7 @@ import random
 import pandas as pd
 import time
 sys.path.append('../helper_functions/')
+sys.path.append('../querying/')
 from common_functions import get_file_index_and_prof_index, check_for_nan
 
 def make_list(initial_string):

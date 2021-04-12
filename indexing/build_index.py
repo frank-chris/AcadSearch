@@ -85,5 +85,5 @@ for file_index in range(file_count):
 
 print("Number of keywords - "+str(len(full_index)))
 
-with open('full_index_newx.json', 'w+',encoding='utf8') as outfile:
+with open('partial_index.json', 'w+',encoding='utf8') as outfile:
     json.dump(full_index, outfile)

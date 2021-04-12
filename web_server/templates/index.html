@@ -6,33 +6,39 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
     <title>Search Engine</title>    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>   
   </head>
-  <body style="background-color: #F8F9FA;font-size:12pt;font-family: 'Roboto', sans-serif;">
-    <nav class="navbar fixed-top navbar-light bg-dark">
-        
-        <div class="container">
-            <div class="row" style="width: 100%;">                
-                <div class="col-md-8">                                
-                    <form class="form-inline" style="margin-top:7px;margin-bottom:7px;">                                                            
-                        <div class="row" style="width: 100%;margin:0">
-                            <div class="col-md-9" style="padding:0">
-                                <input value="{{search_query}}" type="text" class="form-control"  style="width:100%;border-radius:10px 0px 0px 10px;" name="query" placeholder="Search Professors by Name, Area of Working or Past Papers...">
-                            </div>
-                            <div class="col-md-3" style="padding:0;">
-                                <button type="submit" class="btn btn-primary" style="width:100%;border-radius:0px 10px 10px 0px;"> <i class="fa fa-search"></i> Search</button>
-                            </div>
-                        </div> 
-                    </form>   
-                </div>
-                <div class="col-md-4">
-                    filter | x | y | type
-                </div>
-            </div>        
-        </div>              
-    </nav>
+  <body style="background-color: #F8F9FA;font-size:12pt;font-family: 'Open Sans', sans-serif;">
+    <form class="form-inline" style="">
+        <nav class="navbar fixed-top navbar-light bg-dark">        
+            <div class="container" style="margin-top:7px;margin-bottom:7px;">
+                <div class="row" style="width: 100%;">                
+                    <div class="col-md-8">                                                                                                                    
+                            <div class="row" style="width: 100%;margin:0">
+                                <div class="col-md-6" style="padding:0">
+                                    <input value="{{search_query}}" type="text" class="form-control"  style="width:100%;border-radius:10px 0px 0px 10px;" name="query" placeholder="Type keywords...">
+                                </div>
+                                <div class="col-md-3" style="padding:0">
+                                    <select class="form-select form-control" style="width:100%;border-radius:0px 0px 0px 0px;"  name="query_method" aria-label="Default select example">                                        
+                                        <option value="phrase_query">Phrase Query</option>
+                                        <option value="tf_idf">TF-IDF Scoring</option>
+                                        <option value="boolean_and">Boolean AND </option>                                                                                                                    
+                                      </select>                                      
+                                </div>
+                                <div class="col-md-3" style="padding:0;">
+                                    <button type="submit" class="btn btn-primary" style="width:100%;border-radius:0px 10px 10px 0px;"> <i class="fa fa-search"></i> Search</button>
+                                </div>
+                            </div>                         
+                    </div>                    
+                    <div class="col-md-4" style="color:#ffffff;">                        
+                        
+                    </div>
+                </div>        
+            </div>                     
+        </nav>
+    </form> 
     <div class="container" >
         <div class="row">            
             <div class="col-md-8">                
@@ -47,11 +53,11 @@
                 
                 
                 
-                <div class="list-group" >
+                <div class="list-group" id="all_profs">
 
                     {% for prof in prof_data %}
 
-                    <div class="list-group-item list-group-item-action">
+                    <div id="prof_{{loop.index0}}" class="list-group-item list-group-item-action">
                         <div class="row">                                
                             <div class="col-md-2">
                                 <img src="{{prof.image_url}}" style="width:100px;height:100px;border-radius: 100%;">
@@ -59,7 +65,8 @@
                             </div>                        
                             <div class="col-md-10">
                                 <h5 style="padding:0;margin:0;"><b>{{prof.name}}</b></h5>                                                                                                            
-                                {{prof.affiliation}}<br>
+                                {{prof.affiliation}} | <br>
+                                Verified Email at <a href="https://{{prof.email}}">  {{prof.email}} </a><br>
         
                                 <div class="text-muted" style="font-size:10pt;">
                                     {% for topic in prof.topics_list %}
@@ -68,13 +75,13 @@
                                         {%  endif %}
                                     {% endfor %}
                                 </div>                                                         
-                                <a href="https://{{prof.email}}"> {{prof.email}} </a>
+                                
                             </div>                                   
                         </div>            
                         <br>                
                         <center>
                             <a class="btn btn-light btn-sm" href="{{prof.homepage}}">   Homepage</a>      
-                            <a class="btn btn-light btn-sm" href="https://scholar.google.com/citations?user={{prof.scholar_id}}&pagesize=100">Google Scholar Page</a>                          
+                            <a class="btn btn-light btn-sm" href="https://scholar.google.com/citations?user={{prof.scholar_id}}&pagesize=100"> <i class="fa fa-google"></i> Scholar Page</a>                          
                             <button class="btn btn-light btn-sm" onclick="load_citation_info({{loop.index0}})">   Load Citation Info  </button>
                             <button class="btn btn-light btn-sm" onclick="load_paper_info({{loop.index0}})" data-toggle="modal" data-target="#paper_info_modal">  See Papers </button>                                    
                         </center> 
@@ -87,7 +94,7 @@
                                                                 
             </div>
             <div class="col-md-4" style="width: 100%;">
-                <br><br><br>
+                <br><br><br><br>
                 <center>
                 
                 <br><br>                
@@ -127,6 +134,17 @@
   </body>
     {% block javascript %}
     <script>
+        var select_new_val = '{{query_method}}';
+
+        if (select_new_val == 'tf_idf') {
+            $("select").val('tf_idf');
+        } else if(select_new_val == 'boolean_and') {
+            $("select").val('boolean_and');
+        } else {
+            // default 
+            $("select").val('phrase_query');
+        }
+        
         var prof_data =  {{prof_data|tojson}};  
         
         $('#citation_data_outer').css({opacity:'0'}); 
@@ -184,6 +202,8 @@
             }                       
             return html;
         }       
+
+       
                  
     </script>
     {% endblock %}

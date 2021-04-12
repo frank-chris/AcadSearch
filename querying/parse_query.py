@@ -28,6 +28,8 @@ def query_parser(query):
         if stemmed_word not in stop_words:
             parsed_query.append(stemmed_word)
 
+    print(parsed_query)
+
     return parsed_query
 
 def spell_check(query):
