@@ -14,13 +14,14 @@ app.debug = True
 def search():  
 
     start_time = time.time()
+    results_found = 0
 
     prof_data = []   # final data to return
 
     search_query, query_method, index_type = get_parameters(request)
 
     if search_query == '':
-        return render_template('index.html',prof_data=prof_data,time_taken = round(time.time() - start_time, 5), search_query = search_query, query_method = query_method, index_type = index_type)  
+        return render_template('index.html',prof_data=prof_data,time_taken = round(time.time() - start_time, 5), search_query = search_query, query_method = query_method, index_type = index_type, results_found=results_found)  
 
     prof_ids = [] # to store professor ids in sorted order returned by querying algorithm and ranking
 
@@ -41,7 +42,15 @@ def search():
             prof_ids = phrase_retrieval(parsed_query,True)  # passing 'True' to use topic and paper index
     
     # given professor ids, read their entire data from files
+
+    results_found = len(prof_ids)
+
+    try:
+        prof_ids = prof_ids[:1000]
+    except:
+        prof_ids = prof_ids[:]
+
     for prof_id in prof_ids:    
         prof_data.append(read_prof_information(prof_id))
 
-    return render_template('index.html',prof_data=prof_data,time_taken = round(time.time() - start_time, 5), search_query = search_query, query_method = query_method, index_type = index_type) 
+    return render_template('index.html',prof_data=prof_data,time_taken = round(time.time() - start_time, 5), search_query = search_query, query_method = query_method, index_type = index_type, results_found=results_found) 
