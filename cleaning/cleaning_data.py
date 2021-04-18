@@ -47,8 +47,10 @@ for file_index in range(file_count):
             else:
                 redundant_entries[file_index]+=1            
         else:
+            # Check for consistency
             if len(papers_url_list)!=len(papers_title_list):
-                continue                            
+                continue           
+                             
             scholar_ids.add(scholar_id)
             professor_data_to_write = (scholar_id, name, image_url, affiliation, email, homepage, topics_list, cit, h_ind, i_ind, cit5, h_ind5, i_ind5, cit_list, image_url, papers_url_list, papers_title_list)    
             write_prof_data_to_csv(output_file, professor_data_to_write)

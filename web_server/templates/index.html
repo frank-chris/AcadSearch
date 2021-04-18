@@ -19,9 +19,9 @@
                             <div class="row" style="width: 100%;margin:0">
                                 <div class="col-md-6" style="padding:0">
                                     <input value="{{search_query}}" type="text" class="form-control"  style="width:100%;border-radius:10px 0px 0px 10px;" name="query" placeholder="Type keywords...">
-                                </div>
+                                </div>                                
                                 <div class="col-md-3" style="padding:0">
-                                    <select class="form-select form-control" style="width:100%;border-radius:0px 0px 0px 0px;"  name="query_method" aria-label="Default select example">                                        
+                                    <select class="form-select form-control" id="query_method" style="width:100%;border-radius:0px 0px 0px 0px;"  name="query_method" aria-label="Default select example">                                        
                                         <option value="phrase_query">Phrase Query</option>
                                         <option value="tf_idf">TF-IDF Scoring</option>
                                         <option value="boolean_and">Boolean AND </option>                                                                                                                    
@@ -33,7 +33,12 @@
                             </div>                         
                     </div>                    
                     <div class="col-md-4" style="color:#ffffff;">                        
-                        
+                        <!-- <div class="col-md-3" style="padding:0"> -->
+                            <select class="form-select form-control" id="index_type" style="width:100%;border-radius:10px 10px 10px 10px;"  name="index_type" aria-label="Default select example">                                        
+                                <option value="topic_and_paper">Topics and Papers</option>
+                                <option value="name_and_affiliation">Name and Affiliation</option>                                                                                                                                                  
+                                </select>                                      
+                        <!-- </div> -->
                     </div>
                 </div>        
             </div>                     
@@ -134,15 +139,24 @@
   </body>
     {% block javascript %}
     <script>
-        var select_new_val = '{{query_method}}';
+        var select_new_val_query_method = '{{query_method}}';
 
-        if (select_new_val == 'tf_idf') {
-            $("select").val('tf_idf');
-        } else if(select_new_val == 'boolean_and') {
-            $("select").val('boolean_and');
+        if (select_new_val_query_method == 'tf_idf') {
+            $("select#query_method").val('tf_idf');
+        } else if(select_new_val_query_method == 'boolean_and') {
+            $("select#query_method").val('boolean_and');
         } else {
             // default 
-            $("select").val('phrase_query');
+            $("select#query_method").val('phrase_query');
+        }
+
+        var select_new_val_index_type = '{{index_type}}';
+
+        if (select_new_val_index_type == 'name_and_affiliation') {
+            $("select#index_type").val('name_and_affiliation');
+        } else {
+            // default 
+            $("select#index_type").val('topic_and_paper');
         }
         
         var prof_data =  {{prof_data|tojson}};  

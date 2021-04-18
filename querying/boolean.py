@@ -1,14 +1,14 @@
 import numpy as np
 import json
 import sys
-from parse_query import *
 
+index1 = "../indexing/name_and_affiliation_index_full.json"
+with open(index1) as f:
+    name_and_affiliation_index = json.load(f)
 
-#json_file = "../indexing/full_index.json"
-json_file = "../indexing/partial_index.json"
-with open(json_file) as f:
-    documents_containing_word = json.load(f)
-
+index2 = "../indexing/topic_and_paper_index_full.json"
+with open(index2) as f:
+    topic_and_paper_index = json.load(f)
 
 def merge(list1, list2, req_dist = None):
     '''
@@ -44,14 +44,22 @@ def merge(list1, list2, req_dist = None):
 
     return docs
 
-def boolean_retrieval(query, AND = True):
+def boolean_retrieval(parsed_query, use_topic_and_paper_index):
     '''
     Obtain the postings lists of the words in the phrase
     Sort them in the order of their lengths
     Perform a merge wherever two documents are the same
     Also, in Boolean Retrieval, ignore the values of the key, that is, the second value in each tuple
-    '''
-    parsed_query = query_parser(query)    
+    '''    
+
+    AND = True
+    documents_containing_word = dict()
+
+    if use_topic_and_paper_index:
+        documents_containing_word = topic_and_paper_index
+    else:
+        documents_containing_word= name_and_affiliation_index
+
     docs_list = []
     for word in parsed_query:
         if word in documents_containing_word:
@@ -109,13 +117,19 @@ def boolean_retrieval(query, AND = True):
             
     return final_docs
 
-def phrase_retr(phrase):
+def phrase_retrieval(parsed_phrase, use_topic_and_paper_index):
     '''
     Obtain the postings lists of the words in the phrase
     Sort them in the order of their lengths
     Perform a merge wherever two documents are the same, and their positions in the given document have the required distance
-    '''
-    parsed_phrase = query_parser(phrase)    
+    '''     
+
+    documents_containing_word = dict()
+
+    if use_topic_and_paper_index:        
+        documents_containing_word = topic_and_paper_index
+    else:    
+        documents_containing_word = name_and_affiliation_index
 
     # Repeat words in a phrase not handled
     ctr = 0
@@ -126,11 +140,14 @@ def phrase_retr(phrase):
     
     docs_list = []
     for word in parsed_phrase:
+        print(word)
         if word in documents_containing_word:
             docs_list.append(documents_containing_word[word])
         else:
             docs_list.append([])    
     len_list = [len(docs_with_word) for docs_with_word in docs_list]
+
+    print(docs_list)
 
     # Handle the case when no match
     if len(docs_list) == 0:

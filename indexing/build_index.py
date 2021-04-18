@@ -1,43 +1,31 @@
 import csv
 import json
 import pandas as pd
-import nltk
-nltk.download('punkt')
-from nltk.tokenize import word_tokenize
-from nltk.stem import PorterStemmer
 import sys
 import re
-from nltk.corpus import stopwords
 sys.path.append('../helper_functions/')
-from common_functions import get_id
+from common_functions import get_id, get_tokenized_words,check_for_nan
 
-stop_words = set(stopwords.words('english')) 
-full_index = dict()
-stemmer = PorterStemmer()
+prof_topic_and_paper_index = dict()
+prof_name_and_affiliation_index = dict()
 
-def get_words(sentence_list):      
-    words = []
-    for sentence in sentence_list:   
-        try:                   
-            tokenized_words = word_tokenize(re.sub(r'[^A-Za-z0-9]', ' ', sentence.lower()))
-            for word in tokenized_words:
-                stemmed_word = stemmer.stem(word)            
-                if stemmed_word not in stop_words:
-                    words.append(stemmed_word)              
-        except:
-            continue
-    return words
-
-
-def build_index(prof_id, name, affiliation, topics_list, papers_title_list):
-    
-    search_info_list = [name, affiliation] + topics_list + papers_title_list    
-    words = get_words(search_info_list)        
+def build_index_helper(prof_id, string1, string2, remove_stop_words_and_perform_stemming, index):    
+    string_for_index_building = string1+" "+string2
+    words = get_tokenized_words(string_for_index_building,remove_stop_words_and_perform_stemming)        
     for position_index, key in zip(range(len(words)), words):
-        if key in full_index:            
-            full_index[key].append((prof_id, position_index))
+        if key in index:            
+            index[key].append((prof_id, position_index))
         else:
-            full_index[key] = [(prof_id, position_index)]
+            index[key] = [(prof_id, position_index)]    
+
+def build_index(prof_id, name, affiliation, topics_list, papers_title_list):      
+    # Name and Affiliation Index
+    build_index_helper(prof_id, name, affiliation, False, prof_name_and_affiliation_index)
+
+    # Topics and Paper Title Index
+    topics_string = " ".join(topics_list)
+    papers_string = " ".join(papers_title_list)
+    build_index_helper(prof_id, topics_string, papers_string, True, prof_topic_and_paper_index)  
 
 def make_list(initial_string):
     return initial_string.lstrip('[\'').rstrip('\']').split('\', \'')
@@ -48,7 +36,7 @@ def make_list_citations(initial_string):
     except:
         return []
 
-file_count = 1
+file_count = 10
 
 for file_index in range(file_count):    
 
@@ -63,11 +51,11 @@ for file_index in range(file_count):
     for prof_index in range(number_of_professors):    
 
         scholar_id = input_file.iloc[prof_index][0]
-        name = input_file.iloc[prof_index][1]
-        image_url = input_file.iloc[prof_index][2]
-        affiliation = input_file.iloc[prof_index][3]
-        email = input_file.iloc[prof_index][4]
-        homepage = input_file.iloc[prof_index][5]
+        name = check_for_nan(input_file.iloc[prof_index][1])
+        image_url = check_for_nan(input_file.iloc[prof_index][2])
+        affiliation = check_for_nan(input_file.iloc[prof_index][3])
+        email = check_for_nan(input_file.iloc[prof_index][4])
+        homepage = check_for_nan(input_file.iloc[prof_index][5])
         topics_list = make_list(input_file.iloc[prof_index][6])
         cit = int(input_file.iloc[prof_index][7])
         h_ind = int(input_file.iloc[prof_index][8])
@@ -76,14 +64,20 @@ for file_index in range(file_count):
         h_ind5 = int(input_file.iloc[prof_index][11])
         i_ind5 = int(input_file.iloc[prof_index][12])    
         cit_list = make_list_citations(input_file.iloc[prof_index][13])
-        image_url = input_file.iloc[prof_index][14]
+        image_url = check_for_nan(input_file.iloc[prof_index][14])
         papers_url_list = make_list(input_file.iloc[prof_index][15])
         papers_title_list = make_list(input_file.iloc[prof_index][16])    
         prof_id = get_id(file_index, prof_index)
 
-        build_index(prof_id, name, affiliation, topics_list, papers_title_list)         
+        build_index(prof_id, name, affiliation, topics_list, papers_title_list) 
 
-print("Number of keywords - "+str(len(full_index)))
+    print("File "+str(file_index)+" Completed.")        
 
-with open('partial_index.json', 'w+',encoding='utf8') as outfile:
-    json.dump(full_index, outfile)
+print("Number of keywords in name and affiliation index - "+str(len(prof_name_and_affiliation_index)))
+print("Number of keywords in topic and paper index - "+str(len(prof_topic_and_paper_index)))
+
+with open('name_and_affiliation_index_full.json', 'w+',encoding='utf8') as outfile:
+    json.dump(prof_name_and_affiliation_index, outfile)
+
+with open('topic_and_paper_index_full.json', 'w+',encoding='utf8') as outfile:
+    json.dump(prof_topic_and_paper_index, outfile)

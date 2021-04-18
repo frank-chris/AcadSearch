@@ -99,23 +99,24 @@ def write_prof_data_to_csv(professor_file, professor_data_to_write):
     except:
         pass
 
-# change this file name
-df = pd.read_csv('csrankings-0.csv')
+file_count = 10
 
-# change this file name
-professor_file = open('professor_data-0.csv', 'a+',newline ='')
+for i in range(len(file_count)):
+    
+    df = pd.read_csv('csrankings-'+str(i)+'.csv')    
+    professor_file = open('professor_data-'+str(i)+'.csv', 'a+',newline ='')
 
-for i in range(0, len(df)):
+    for i in range(0, len(df)):
 
-    scholar_id = df.iloc[i]['scholarid'] 
+        scholar_id = df.iloc[i]['scholarid'] 
 
-    if scholar_id == 'NOSCHOLARPAGE':
-        continue
+        if scholar_id == 'NOSCHOLARPAGE':
+            continue
 
-    found, name, image_url, affiliation, email, homepage, topics_list, cit, h_ind, i_ind, cit5, h_ind5, i_ind5, cit_list, image_url, papers_url_list, papers_title_list = extract_prof_info(scholar_id)
+        found, name, image_url, affiliation, email, homepage, topics_list, cit, h_ind, i_ind, cit5, h_ind5, i_ind5, cit_list, image_url, papers_url_list, papers_title_list = extract_prof_info(scholar_id)
 
-    if not found:
-        continue
+        if not found:
+            continue
 
-    professor_data_to_write = (scholar_id, name, image_url, affiliation, email, homepage, topics_list, cit, h_ind, i_ind, cit5, h_ind5, i_ind5, cit_list, image_url, papers_url_list, papers_title_list)    
-    write_prof_data_to_csv(professor_file, professor_data_to_write)
+        professor_data_to_write = (scholar_id, name, image_url, affiliation, email, homepage, topics_list, cit, h_ind, i_ind, cit5, h_ind5, i_ind5, cit_list, image_url, papers_url_list, papers_title_list)    
+        write_prof_data_to_csv(professor_file, professor_data_to_write)

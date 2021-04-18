@@ -1,8 +1,28 @@
 import csv
 import pandas as pd
 import re
+import nltk
+from nltk.stem import PorterStemmer
+from nltk.corpus import stopwords
+from nltk import word_tokenize
+
+stop_words = set(stopwords.words('english')) 
+stemmer = PorterStemmer()
 
 M = 5000
+
+def get_tokenized_words(sentence, remove_stop_words_and_perform_stemming):      
+    words = []                             
+    tokenized_words = word_tokenize(re.sub(r'[^A-Za-z0-9]', ' ', sentence.lower()))
+    for word in tokenized_words:
+        if not remove_stop_words_and_perform_stemming:
+            # Do not perform stemming and not remove stop words, done for name and affiliation index
+            words.append(word)
+        else:
+            stemmed_word = stemmer.stem(word)            
+            if stemmed_word not in stop_words:
+                words.append(stemmed_word)                      
+    return words
 
 def write_prof_data_to_csv(output_file, professor_data_to_write):
     try:
