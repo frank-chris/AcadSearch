@@ -1,7 +1,7 @@
 print("Loading files. Please wait...")
 import time
 import sys
-sys.path.append('../QUERYING/')
+sys.path.append('../querying/')
 sys.path.append('../helper_functions/')
 from common_functions import get_tokenized_words
 from read_information import read_prof_information, get_parameters

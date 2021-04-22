@@ -8,7 +8,7 @@ import time
 import random
 import sys
 sys.path.append('../helper_functions/')
-sys.path.append('../QUERYING/')
+sys.path.append('../querying/')
 from common_functions import get_file_index_and_prof_index, get_id, check_for_nan, get_tokenized_words
 from get_tf_idf import get_tf_idf_list
 from boolean import phrase_retrieval, boolean_retrieval
