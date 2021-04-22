@@ -103,8 +103,8 @@ file_count = 10
 
 for i in range(len(file_count)):
     
-    df = pd.read_csv('csrankings-'+str(i)+'.csv')    
-    professor_file = open('professor_data-'+str(i)+'.csv', 'a+',newline ='')
+    df = pd.read_csv('../data/csrankings-'+str(i)+'.csv')    
+    professor_file = open('../data/professor_data-'+str(i)+'.csv', 'a+',newline ='')
 
     for i in range(0, len(df)):
 

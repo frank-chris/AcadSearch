@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 
 file_count = 10
 
-data_files = [pd.read_csv('../cleaning/professor_data-'+str(file_index)+'-cleaned.csv',header=None,encoding='utf8') for file_index in range(file_count) ]
+data_files = [pd.read_csv('../data/professor_data-'+str(file_index)+'-cleaned.csv',header=None,encoding='utf8') for file_index in range(file_count) ]
 
 def make_list(initial_string):
     return initial_string.lstrip('[\'').rstrip('\']').split('\', \'')

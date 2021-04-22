@@ -36,7 +36,7 @@ def make_list_citations(initial_string):
 
 file_count = 10
 
-data_files = [pd.read_csv('../cleaning/professor_data-'+str(file_index)+'-cleaned.csv',header=None,encoding='utf8') for file_index in range(file_count) ]
+data_files = [pd.read_csv('../data/professor_data-'+str(file_index)+'-cleaned.csv',header=None,encoding='utf8') for file_index in range(file_count) ]
 
 def read_prof_information(prof_id):   
 

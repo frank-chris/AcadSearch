@@ -2,7 +2,7 @@ import json
 import sys
 sys.path.append('../helper_functions/')
 
-with open('../querying/tf_idf_scores_topic_and_paper_full.json') as f:
+with open('../data/tf_idf_scores_topic_and_paper_full.json') as f:
     tf_idf_score = json.load(f)
 
 def get_tf_idf_list(parsed_query,n=99999999999):
@@ -27,4 +27,5 @@ def get_tf_idf_list(parsed_query,n=99999999999):
     for i in range(len(docs_list)):
         docs_list[i] = docs_list[i][0]
 
+    # return first n
     return docs_list[:n]

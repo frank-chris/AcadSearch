@@ -1,6 +1,7 @@
+print("Loading files. Please wait...")
 import time
 import sys
-sys.path.append('../querying/')
+sys.path.append('../QUERYING/')
 sys.path.append('../helper_functions/')
 from common_functions import get_tokenized_words
 from read_information import read_prof_information, get_parameters
@@ -9,6 +10,8 @@ from boolean import phrase_retrieval, boolean_retrieval
 from flask import Flask, render_template, request, redirect
 app = Flask(__name__)
 app.debug = True
+
+print("Files loaded. Now, open in browser.")
 
 @app.route('/', methods=['GET','POST'])
 def search():  

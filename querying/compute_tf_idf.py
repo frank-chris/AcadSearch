@@ -7,12 +7,12 @@ sys.path.append('../helper_functions/')
 from common_functions import get_id
 
 def compute_tf_idf_score():
-    with open('../indexing/topic_and_paper_index_full.json') as f:
+    with open('../data/topic_and_paper_index_full.json') as f:
         data = json.load(f)
     
     term_list = data.keys()
 
-    csv_sizes = list(pd.read_csv('../cleaning/metadata.csv', header=None)[0])
+    csv_sizes = list(pd.read_csv('../data/metadata.csv', header=None)[0])
 
     id_list = []
     for file_id in range(len(csv_sizes)):
@@ -54,7 +54,7 @@ def compute_tf_idf_score():
         idf = np.log(N/df_dict[t]+1)
         scores[str(t)+'_'+str(d)] = tf*idf
 
-    with open("tf_idf_scores_topic_and_paper_full.json", "w") as fp: 
+    with open("../data/tf_idf_scores_topic_and_paper_full.json", "w+") as fp: 
         json.dump(scores, fp)
 
 

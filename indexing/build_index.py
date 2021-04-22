@@ -3,6 +3,7 @@ import json
 import pandas as pd
 import sys
 import re
+from tqdm import tqdm 
 sys.path.append('../helper_functions/')
 from common_functions import get_id, get_tokenized_words,check_for_nan
 
@@ -41,14 +42,14 @@ file_count = 10
 for file_index in range(file_count):    
 
     try:
-        input_file = pd.read_csv('../cleaning/professor_data-'+str(file_index)+'-cleaned.csv',header=None,encoding='utf8')
+        input_file = pd.read_csv('../data/professor_data-'+str(file_index)+'-cleaned.csv',header=None,encoding='utf8')
     except:
         print("Error in opening input file.")
         sys.exit(0)
 
     number_of_professors = len(input_file)
     
-    for prof_index in range(number_of_professors):    
+    for prof_index in tqdm(range(number_of_professors)):    
 
         scholar_id = input_file.iloc[prof_index][0]
         name = check_for_nan(input_file.iloc[prof_index][1])
@@ -76,8 +77,8 @@ for file_index in range(file_count):
 print("Number of keywords in name and affiliation index - "+str(len(prof_name_and_affiliation_index)))
 print("Number of keywords in topic and paper index - "+str(len(prof_topic_and_paper_index)))
 
-with open('name_and_affiliation_index_full.json', 'w+',encoding='utf8') as outfile:
+with open('../data/name_and_affiliation_index_full.json', 'w+',encoding='utf8') as outfile:
     json.dump(prof_name_and_affiliation_index, outfile)
 
-with open('topic_and_paper_index_full.json', 'w+',encoding='utf8') as outfile:
+with open('../data/topic_and_paper_index_full.json', 'w+',encoding='utf8') as outfile:
     json.dump(prof_topic_and_paper_index, outfile)

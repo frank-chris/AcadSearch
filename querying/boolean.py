@@ -2,11 +2,11 @@ import numpy as np
 import json
 import sys
 
-index1 = "../indexing/name_and_affiliation_index_full.json"
+index1 = "../data/name_and_affiliation_index_full.json"
 with open(index1) as f:
     name_and_affiliation_index = json.load(f)
 
-index2 = "../indexing/topic_and_paper_index_full.json"
+index2 = "../data/topic_and_paper_index_full.json"
 with open(index2) as f:
     topic_and_paper_index = json.load(f)
 

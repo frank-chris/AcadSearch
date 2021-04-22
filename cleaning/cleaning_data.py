@@ -11,8 +11,8 @@ redundant_entries = dict()
 for file_index in range(file_count):    
 
     try:
-        input_file = pd.read_csv('../scraping/professor_data-'+str(file_index)+'.csv',header=None,encoding='utf8')
-        output_file = open('professor_data-'+str(file_index)+'-cleaned.csv', 'w+',newline ='',encoding='utf8')
+        input_file = pd.read_csv('../data/professor_data-'+str(file_index)+'.csv',header=None,encoding='utf8')
+        output_file = open('../data/professor_data-'+str(file_index)+'-cleaned.csv', 'w+',newline ='',encoding='utf8')
     except:
         print("Error in opening input/output file.")
         sys.exit(0)

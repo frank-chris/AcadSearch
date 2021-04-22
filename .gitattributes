@@ -1,3 +1,1 @@
-indexing/topic_and_paper_full_index.json filter=lfs diff=lfs merge=lfs -text
-querying/tf_and_idf_scores_topic_and_paper_full.json filter=lfs diff=lfs merge=lfs -text
 *.json filter=lfs diff=lfs merge=lfs -text
