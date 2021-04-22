@@ -25,15 +25,21 @@ def search():
 
     prof_ids = [] # to store professor ids in sorted order returned by querying algorithm and ranking
 
-    parsed_query = get_tokenized_words(search_query,True)        
+      
 
     # choose between different index and different methods
     if index_type == 'name_and_affiliation':
+        
+        parsed_query = get_tokenized_words(search_query,False)
+
         if query_method == 'boolean_and':
             prof_ids = boolean_retrieval(parsed_query,False)  # passing 'False' to use name and affiliation index
         else:
             prof_ids = phrase_retrieval(parsed_query,False)    # passing 'False' to use name and affiliation index        
     else:
+
+        parsed_query = get_tokenized_words(search_query,True)    
+
         if query_method == 'tf_idf':
             prof_ids = get_tf_idf_list(parsed_query)
         elif query_method == 'boolean_and':

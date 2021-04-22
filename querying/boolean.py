@@ -139,15 +139,12 @@ def phrase_retrieval(parsed_phrase, use_topic_and_paper_index):
         ctr += 1
     
     docs_list = []
-    for word in parsed_phrase:
-        print(word)
+    for word in parsed_phrase:        
         if word in documents_containing_word:
             docs_list.append(documents_containing_word[word])
         else:
             docs_list.append([])    
     len_list = [len(docs_with_word) for docs_with_word in docs_list]
-
-    print(docs_list)
 
     # Handle the case when no match
     if len(docs_list) == 0:
