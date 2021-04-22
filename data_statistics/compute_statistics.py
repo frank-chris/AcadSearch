@@ -1,10 +1,14 @@
 import numpy as np 
 import pandas as pd
+import json
 import plotly.graph_objects as go
 
 file_count = 10
 
 data_files = [pd.read_csv('../data/professor_data-'+str(file_index)+'-cleaned.csv',header=None,encoding='utf8') for file_index in range(file_count) ]
+
+with open('../data/topic_and_paper_index_full.json') as f:
+    index_dict = json.load(f)
 
 def make_list(initial_string):
     return initial_string.lstrip('[\'').rstrip('\']').split('\', \'')
@@ -31,6 +35,15 @@ def compute_and_plot_statistics():
     stats['cit_5_median'] = int(data_df[10].median())
     stats['h_ind_5_median'] = int(data_df[11].median())
     stats['i_ind_5_median'] = int(data_df[12].median())
+
+    word_frequencies = []
+    for value in index_dict.values():
+        word_frequencies.append(len(value))
+
+    # frequency distribution histogram
+    fig = go.Figure(data=[go.Histogram(x=word_frequencies)])
+    fig.update_layout(title_text='No. of words with frequency k as a function of k', xaxis_title='k', yaxis_title='no. of words with frequency k')
+    fig.show()
 
     # pie chart 1
     labels = ['Affiliation provided', 'Affiliation not provided']
