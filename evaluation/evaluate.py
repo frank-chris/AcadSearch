@@ -41,6 +41,15 @@ recallrate['prof-paper-phrase-retrieval-recall-rate-10']  = 0
 recallrate['prof-paper-tf-idf-recall-rate-5']  = 0
 recallrate['prof-paper-tf-idf-recall-rate-10']  = 0
 
+avgquerytime = dict()
+avgquerytime['prof-name-boolean-retrieval'] = []
+avgquerytime['prof-affiliation-boolean-retrieval'] = []
+avgquerytime['prof-name-phrase-retrieval'] = []
+avgquerytime['prof-affiliation-phrase-retrieval'] = []
+avgquerytime['prof-paper-boolean-retrieval'] = []
+avgquerytime['prof-paper-phrase-retrieval'] = []
+avgquerytime['prof-paper-tf-idf'] = []
+
 file_count = 10
 data_files = [pd.read_csv('../data/professor_data-'+str(file_index)+'-cleaned.csv',header=None,encoding='utf8') for file_index in range(file_count) ]
 
@@ -54,6 +63,12 @@ def find_median(input_list):
         return input_list[0]
     else:
         return input_list[(N + 1)//2]
+
+def find_mean(input_list):
+    N = len(input_list)
+    if N==0:
+        return -1
+    return (sum(input_list)/N)
 
 def generate_random_professor():
     list_of_prof_count_per_file = list(pd.read_csv('../data/metadata.csv', header=None)[0])
@@ -137,7 +152,8 @@ for i in tqdm(range(number_of_professors_to_test)):
     rank_obtained = find_rank_in_list(query_result_prof_ids, ground_truth_prof_id) 
     recallrate['prof-name-boolean-retrieval-recall-rate-5']+=find_recall_rate(query_result_prof_ids, ground_truth_prof_id, 5)
     recallrate['prof-name-boolean-retrieval-recall-rate-10']+=find_recall_rate(query_result_prof_ids, ground_truth_prof_id, 10)
-    ranks['prof-name-boolean-retrieval'].append(rank_obtained)    
+    ranks['prof-name-boolean-retrieval'].append(rank_obtained)
+    avgquerytime['prof-name-boolean-retrieval'].append(time_taken*1000)    
 
     # Using affiliation as search query and boolean retrieval as search method
     search_query = prof_data['affiliation']
@@ -147,6 +163,7 @@ for i in tqdm(range(number_of_professors_to_test)):
     recallrate['prof-affiliation-boolean-retrieval-recall-rate-5']+=find_recall_rate(query_result_prof_ids, ground_truth_prof_id, 5)
     recallrate['prof-affiliation-boolean-retrieval-recall-rate-10']+=find_recall_rate(query_result_prof_ids, ground_truth_prof_id, 10)
     ranks['prof-affiliation-boolean-retrieval'].append(rank_obtained)
+    avgquerytime['prof-affiliation-boolean-retrieval'].append(time_taken*1000)
 
     # Using name as search query and phrase retrieval as search method    
     search_query = prof_data['name']
@@ -156,6 +173,7 @@ for i in tqdm(range(number_of_professors_to_test)):
     recallrate['prof-name-phrase-retrieval-recall-rate-5']+=find_recall_rate(query_result_prof_ids, ground_truth_prof_id, 5)
     recallrate['prof-name-phrase-retrieval-recall-rate-10']+=find_recall_rate(query_result_prof_ids, ground_truth_prof_id, 10)        
     ranks['prof-name-phrase-retrieval'].append(rank_obtained)
+    avgquerytime['prof-name-phrase-retrieval'].append(time_taken*1000)
 
     # Using affiliation as search query and phrase retrieval as search method  
     search_query = prof_data['affiliation']
@@ -165,6 +183,7 @@ for i in tqdm(range(number_of_professors_to_test)):
     recallrate['prof-affiliation-phrase-retrieval-recall-rate-5']+=find_recall_rate(query_result_prof_ids, ground_truth_prof_id, 5)
     recallrate['prof-affiliation-phrase-retrieval-recall-rate-10']+=find_recall_rate(query_result_prof_ids, ground_truth_prof_id, 10)        
     ranks['prof-affiliation-phrase-retrieval'].append(rank_obtained)
+    avgquerytime['prof-affiliation-phrase-retrieval'].append(time_taken*1000)
     
     # Using paper title as search query and boolean retrieval as search method
     search_query = prof_data['papers_title_list'][random_paper_index]
@@ -174,6 +193,7 @@ for i in tqdm(range(number_of_professors_to_test)):
     recallrate['prof-paper-boolean-retrieval-recall-rate-5']+=find_recall_rate(query_result_prof_ids, ground_truth_prof_id, 5)
     recallrate['prof-paper-boolean-retrieval-recall-rate-10']+=find_recall_rate(query_result_prof_ids, ground_truth_prof_id, 10)         
     ranks['prof-paper-boolean-retrieval'].append(rank_obtained)
+    avgquerytime['prof-paper-boolean-retrieval'].append(time_taken*1000)
 
     # Using paper title as search query and phrase retrieval as search method
     search_query = prof_data['papers_title_list'][random_paper_index]
@@ -183,6 +203,7 @@ for i in tqdm(range(number_of_professors_to_test)):
     recallrate['prof-paper-phrase-retrieval-recall-rate-5']+=find_recall_rate(query_result_prof_ids, ground_truth_prof_id, 5)
     recallrate['prof-paper-phrase-retrieval-recall-rate-10']+=find_recall_rate(query_result_prof_ids, ground_truth_prof_id, 10)        
     ranks['prof-paper-phrase-retrieval'].append(rank_obtained)
+    avgquerytime['prof-paper-phrase-retrieval'].append(time_taken*1000)
 
     # Using paper title as search query and tf-idf as search method
     search_query = prof_data['papers_title_list'][random_paper_index]
@@ -192,23 +213,24 @@ for i in tqdm(range(number_of_professors_to_test)):
     recallrate['prof-paper-tf-idf-recall-rate-5']+=find_recall_rate(query_result_prof_ids, ground_truth_prof_id, 5)
     recallrate['prof-paper-tf-idf-recall-rate-10']+=find_recall_rate(query_result_prof_ids, ground_truth_prof_id, 10)           
     ranks['prof-paper-tf-idf'].append(rank_obtained)
+    avgquerytime['prof-paper-tf-idf'].append(time_taken*1000)
 
 
 for key in recallrate:
-    recallrate[key]=(recallrate[key]/count)*100
+    recallrate[key]=(recallrate[key]/count)*100    
 
 
 # Plotting the median rank
 query_and_method = ['Prof Name, Boolean', 'Prof Name, Phrase', 'Prof Affiliation, Boolean', 'Prof Affiliation, Phrase', 'Prof Paper, Boolean', 'Prof Paper, Phrase', 'Prof Paper, TF-IDF']
 ranks_value = [find_median(ranks['prof-name-boolean-retrieval']), find_median(ranks['prof-name-phrase-retrieval']), find_median(ranks['prof-affiliation-boolean-retrieval']), find_median(ranks['prof-affiliation-phrase-retrieval']), find_median(ranks['prof-paper-boolean-retrieval']), find_median(ranks['prof-paper-phrase-retrieval']), find_median(ranks['prof-paper-tf-idf'])]
 plt.figure(0)
-plt.bar(query_and_method, ranks_value)
-plt.xlabel('Median Rank')
+plt.bar(query_and_method, ranks_value, color="mediumpurple")
+plt.ylabel('Median Rank')
 plt.title('Median rank evaluation for '+str(number_of_professors_to_test)+' ground truths \n Rank represents the position at which desired result appears in search results')
-plt.ylabel('Search Query and Method Used')
-plt.xticks(fontsize=6,rotation=10)
-for index,data in enumerate(ranks_value):
-    plt.text(x=index,y=data+0.5,s=f"{data}",fontdict=dict(fontsize=12))
+plt.xlabel('Search Query and Method Used')
+plt.xticks(fontsize=5,rotation=7)
+for i, v in enumerate(ranks_value):
+    plt.annotate(str(v), xy=(i,v), xytext=(-7,7), textcoords='offset points')
 plt.savefig('median_rank.png', dpi=300)
 
 
@@ -222,10 +244,34 @@ recall_rate_10 = [recallrate['prof-name-boolean-retrieval-recall-rate-10'],recal
 x_1 = [2*i for i in range(len(recall_rate_5))]
 x_2 = [x + 2*width for x in x_1]
 plt.figure(1)
-plt.bar(x_1, recall_rate_5, color ='r', width = 0.5, edgecolor ='white', label ='Recall Rate @ 5')
-plt.bar(x_2, recall_rate_10, color ='b', width = 0.5, edgecolor ='white', label ='Recall Rate @ 10')
+plt.bar(x_1, recall_rate_5, color ='mediumpurple', width = 0.5, edgecolor ='white', label ='Recall Rate @ 5')
+plt.bar(x_2, recall_rate_10, color ='darkblue', width = 0.5, edgecolor ='white', label ='Recall Rate @ 10')
 plt.ylabel('Recall Rate')
 plt.title('Recall rate evaluation for '+str(number_of_professors_to_test)+' ground truths \n Recall rate (R@X) represents % of time desired results appeared in top X')
 plt.xlabel('Search Query and Method Used')
-plt.xticks([2*i + width for i in range(len(recall_rate_5))],query_and_method, fontsize=6, rotation=10)
+plt.xticks([2*i + width for i in range(len(recall_rate_5))],query_and_method, fontsize=5, rotation=7)
+plt.legend(['Recall Rate @ 5', 'Recall Rate @ 10'])
 plt.savefig('recall_rate.png', dpi=300)
+
+
+# Plotting the Average Query Time
+
+def get_time_in_ms(time_in_s):
+    value = str(time_in_s)
+    try:
+        value = value[:4]
+        return value+" ms"
+    except:
+        return value+" ms"
+
+query_and_method = ['Prof Name, Boolean', 'Prof Name, Phrase', 'Prof Affiliation, Boolean', 'Prof Affiliation, Phrase', 'Prof Paper, Boolean', 'Prof Paper, Phrase', 'Prof Paper, TF-IDF']
+avg_time_value = [find_mean(avgquerytime['prof-name-boolean-retrieval']), find_mean(avgquerytime['prof-name-phrase-retrieval']), find_mean(avgquerytime['prof-affiliation-boolean-retrieval']), find_mean(avgquerytime['prof-affiliation-phrase-retrieval']), find_mean(avgquerytime['prof-paper-boolean-retrieval']), find_mean(avgquerytime['prof-paper-phrase-retrieval']), find_mean(avgquerytime['prof-paper-tf-idf'])]
+plt.figure(2)
+plt.plot(query_and_method, avg_time_value, 'ro',color="mediumpurple")
+plt.ylabel('Average Query Time (in ms)')
+plt.title('Average query time for '+str(number_of_professors_to_test)+' searches')
+plt.xlabel('Search Query and Method Used')
+plt.xticks(fontsize=5,rotation=7)
+for i, v in enumerate(avg_time_value):
+    plt.annotate(get_time_in_ms(v), xy=(i,v), xytext=(-7,7), textcoords='offset points')
+plt.savefig('average_query_time.png', dpi=300)
