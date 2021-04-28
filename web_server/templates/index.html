@@ -12,8 +12,14 @@
   </head>
   <body style="background-color: #EFF5FF;font-size:12pt;font-family: 'Open Sans', sans-serif;">
     <form class="form-inline" style="">
-        <nav class="navbar fixed-top navbar-light bg-dark">        
+        <nav class="navbar fixed-top navbar-light bg-dark">                 
+
             <div class="container" style="margin-top:7px;margin-bottom:7px;">
+                <div class="row">
+                    <div class="col-md-12" style="text-align: center !important;color:#ffffff;font-size:18pt;margin-bottom:3px;">                        
+                        <span style="font-size: 20pt;"><b>A</b></span>CAD <span style="font-size: 20pt;"><b>S</b></span>EARCH                        
+                    </div>
+                </div><Z></Z>
                 <div class="row" style="width: 100%;">                
                     <div class="col-md-8">                                                                                                                    
                             <div class="row" style="width: 100%;margin:0">
@@ -28,18 +34,19 @@
                                       </select>                                      
                                 </div>
                                 <div class="col-md-3" style="padding:0;">
-                                    <button type="submit" class="btn btn-primary" style="background-color:#9370DB;width:100%;border-radius:0px 10px 10px 0px;"> <i class="fa fa-search"></i> Search</button>
+                                    <button type="submit" class="btn btn-primary" style="background-color:#9370DB;border-color:#9370DB;width:100%;border-radius:0px 10px 10px 0px;"> <i class="fa fa-search"></i> Search</button>
                                 </div>
                             </div>                         
                     </div>                    
-                    <div class="col-md-4" style="color:#ffffff;">                        
+                    <div class="col-md-4" style="color:#ffffff;margin-right: 0;padding-right: 0;">                        
                         <!-- <div class="col-md-3" style="padding:0"> -->
-                            <select class="form-select form-control" id="index_type" style="width:100%;border-radius:10px 10px 10px 10px;"  name="index_type" aria-label="Default select example">                                        
+                            <select class="form-select form-control" id="index_type" style="width:100%;border-radius:10px 10px 10px 10px;"  name="index_type" aria-label="Default select example">                                                                        
                                 <option value="topic_and_paper">Topics and Papers</option>
                                 <option value="name_and_affiliation">Name and Affiliation</option>                                                                                                                                                  
-                                </select>                                      
+                            </select>                                      
                         <!-- </div> -->
                     </div>
+                    
                 </div>        
             </div>                     
         </nav>
@@ -48,15 +55,32 @@
         <div class="row">            
             <div class="col-md-8">                
                 
-                <br> <br>
-                
-                
+                <br> <br><br><br>                                
 
                 {% if prof_data|length > 0 %}
 
-                <br><br><center>Found <b>{{ results_found }} </b> results in <b>{{time_taken}}</b>s  <br><br>    </center>
+                <br><br>
                 
+                <div style="text-align: left;float:left;">
+                    Found <b>{{ results_found }} </b> results in <b>{{time_taken}}</b>s                                     
+                </div>
+
+                <div style="text-align: right;">
+                    <span style="margin-top:-30px !important;">Sort By : &nbsp;</span>
+                    <!-- <div class="col-md-3" style="padding:0"> -->
+                        <select class="form-select form-control" id="sort_select" style="float:right;width:50%;margin-top:-8px;border-radius:10px 10px 10px 10px;" aria-label="Default select example">                                        
+                            <option value="default">Default (As Ranked by Search Engine)</option>                                                                                                                                               
+                            <option value="h_index_overall">H-Index (Overall)</option>
+                            <option value="h_index_past_5">H-Index (Past 5 Years)</option>
+                            <option value="i_index_overall">I-Index (Overall)</option>
+                            <option value="i_index_past_5">I-Index (Past 5 Years)</option>
+                            <option value="citations_overall">Citations (Overall)</option>
+                            <option value="citations_past_5">Citations (Past 5 Years)</option>                               
+                        </select>                                      
+                    <!-- </div> -->                                     
+                </div>
                 
+                <br>             
                 
                 <div class="list-group" id="all_profs">
 
@@ -70,7 +94,7 @@
                             </div>                        
                             <div class="col-md-10">
                                 <h5 style="padding:0;margin:0;"><b>{{prof.name}}</b></h5>                                                                                                            
-                                {{prof.affiliation}} | <br>
+                                {{prof.affiliation}} <br>
                                 Verified Email at <a href="https://{{prof.email}}">  {{prof.email}} </a><br>
         
                                 <div class="text-muted" style="font-size:10pt;">
@@ -102,7 +126,7 @@
                 <br><br><br><br>
                 <center>
                 
-                <br><br>                
+                <br><br>    <br><br>            
                 <div class="card" id="citation_data_outer" style="position:fixed;">
                     
                     <div class="card-body">                                                
@@ -208,8 +232,7 @@
 
         function get_paper_html(prof_index){
             var html = '';
-            for(var paper_index in prof_data[prof_index].papers_title_list) {
-                console.log(paper_index);                
+            for(var paper_index in prof_data[prof_index].papers_title_list) {                            
                 var paper_title = prof_data[prof_index].papers_title_list[paper_index];
                 var paper_url = prof_data[prof_index].papers_url_list[paper_index];
                 html = html + '<a href="'+paper_url+'" class="list-group-item list-group-item-action">'+paper_title+'</a>';
@@ -217,6 +240,44 @@
             return html;
         }       
 
+
+        function sort_results(field_type){
+            // Reference for sorting - https://stackoverflow.com/questions/5066925/javascript-only-sort-a-bunch-of-divs
+            var profs_html = document.getElementById('all_profs').children;
+            profs_html = Array.prototype.slice.call(profs_html, 0);
+            profs_html.sort(function(prof_a, prof_b) {
+                var prof_a_index = prof_a.id.split('_')[1];
+                var prof_b_index = prof_b.id.split('_')[1];
+                if(field_type == 'h_index_overall'){
+                    return prof_data[prof_b_index].h_ind - prof_data[prof_a_index].h_ind;
+                } else if(field_type == 'h_index_past_5'){
+                    return prof_data[prof_b_index].h_ind5 - prof_data[prof_a_index].h_ind5;
+                } else if(field_type == 'i_index_overall'){
+                    return prof_data[prof_b_index].i_ind - prof_data[prof_a_index].i_ind;
+                } else if(field_type == 'i_index_past_5'){
+                    return prof_data[prof_b_index].i_ind5 - prof_data[prof_a_index].i_ind5;
+                } else if(field_type == 'citations_overall'){
+                    return prof_data[prof_b_index].cit - prof_data[prof_a_index].cit;
+                } else if(field_type == 'citations_past_5'){
+                    return prof_data[prof_b_index].cit5 - prof_data[prof_a_index].cit5;
+                } else {
+                    // sort in the order the results first returned from search engine algorithm
+                    return prof_a_index - prof_b_index;
+                }
+                
+            });
+            var all_profs_div = document.getElementById('all_profs');
+            all_profs_div.innerHTML = "";
+
+            for(var i = 0, l = profs_html.length; i < l; i++) {
+                all_profs_div.appendChild(profs_html[i]);
+            }
+        }    
+        
+        $('#sort_select').change(function(){
+            var field_type = $(this).find("option:selected").attr('value');
+            sort_results(field_type);       
+        });
        
                  
     </script>

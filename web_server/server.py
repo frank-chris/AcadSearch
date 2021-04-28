@@ -7,6 +7,7 @@ from common_functions import get_tokenized_words
 from read_information import read_prof_information, get_parameters
 from get_tf_idf import get_tf_idf_list
 from boolean import phrase_retrieval, boolean_retrieval
+from default_rankings import default_ranking_metric
 from flask import Flask, render_template, request, redirect
 app = Flask(__name__)
 app.debug = True
@@ -61,5 +62,9 @@ def search():
 
     for prof_id in prof_ids:    
         prof_data.append(read_prof_information(prof_id))
+
+    # Use default ranking if query method is boolean or phrase (Since, tf-idf hence it's own scorings)
+    if query_method=='boolean_and' or query_method=='phrase_query':
+        prof_data = sorted(prof_data, key = default_ranking_metric, reverse=True)
 
     return render_template('index.html',prof_data=prof_data,time_taken = round(time.time() - start_time, 5), search_query = search_query, query_method = query_method, index_type = index_type, results_found=results_found) 
