@@ -2,24 +2,61 @@
 
 Experience the live website at [acadsearch.pythonanywhere.com](https://acadsearch.pythonanywhere.com)
 
-![SS1](https://github.com/nishikantparmariam/Data-Science-Project/blob/main/snapshot-1.png)
+## Table of Contents
 
-![SS2](https://github.com/nishikantparmariam/Data-Science-Project/blob/main/snapshot-2.png)
+**[Motivation](#motivation)**<br>
+**[What we have built?](#what-we-have-built?)**<br>
+**[Working Snapshots](#working-snapshots)**<br>
+**[High Level Design](#high-level-design)**<br>
+**[Modules of Search Engine](#modules-of-search-engine)**<br>
+**[Work Flow](#work-flow)**<br>
+**[Evaluation Metrics](#evaluation)**<br>
+**[Detailed Report](https://github.com/nishikantparmariam/Data-Science-Project/blob/main/Report.pdf)**<br>
+**[Presentation and Demo Video]()**<br>
+**[Future Work](#future-work)**<br>
+**[Code Structure](#code-structure)**<br>
+**[References and Credits](#references-and-credits)**<br>
 
-This project has been made as a part of project component of the course **Introduction to Data Science** offered at IIT Gandhinagar in Semester-2 AY 2020-21 under the guidance of **Prof. Anirban Dasgupta**.
+### Motivation
 
-The contributors of this project are [Nishikant Parmar](https://github.com/nishikantparmariam/), [Chris Francis](https://github.com/frank-chris), [Amey Kulkarni](https://github.com/amey-kulkarni27)
+Students often find the need to search for professors based on various criteria
+such as name, university, research topics, top cited papers and rank them based
+on factors like citations or h-index. A simple Google search may not allow you to
+first shortlist professors based on whether they do research in "adversarial machine
+learning" and then rank them according to the number of citations that they have
+in the last 5 years
 
-### Table of Contents
-**[Proposal](#installation-instructions)**<br>
-**[Code Structure](#compatibility)**<br>
-**[Modules of Search Engine](#compatibility)**<br>
-**[Evaluation](#notes-and-miscellaneous)**<br>
-**[Detailed Report](#usage-instructions)**<br>
-**[Video](#troubleshooting)**<br>
-**[Future Work](#building-the-extension-bundles)**<br>
+### What we have built?
 
+We have developed a search engine that can cater to the needs
+of students looking for professors to approach for projects, internships or jobs.
+The search engine allows users to search for professors based on name, university,
+research areas and paper titles using 3 different retrieval methods. The engine also
+allows users to sort the search results based on criteria like h-index, citations in the
+last 5 years etc. We have deployed the search engine publicly as a web application,
+and also evaluated its performance in terms of time and quality of results.
 
+### Working Snapshots
+
+![SS2](snapshot-2.png)
+
+![SS1](snapshot-1.png)
+
+## High Level Design
+
+![SS1](high-level-architecture.png)
+
+## Modules of Search Engine
+
+## Work Flow
+
+![SS2](flow-chart.png)
+
+## Evaluation
+
+## Future Work
+
+## Code Structure
 
 ```
 .
@@ -108,3 +145,9 @@ The contributors of this project are [Nishikant Parmar](https://github.com/nishi
     └── templates
         └── index.html
 ```
+
+### References and Credits
+
+This project has been made as a part of project component of the course **Introduction to Data Science** offered at IIT Gandhinagar in Semester-2 AY 2020-21 under the guidance of **Prof. Anirban Dasgupta**.
+
+The contributors of this project are [Nishikant Parmar](https://github.com/nishikantparmariam/), [Chris Francis](https://github.com/frank-chris), [Amey Kulkarni](https://github.com/amey-kulkarni27)
