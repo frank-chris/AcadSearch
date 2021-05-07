@@ -8,11 +8,15 @@ from read_information import read_prof_information, get_parameters
 from get_tf_idf import get_tf_idf_list
 from boolean import phrase_retrieval, boolean_retrieval
 from default_rankings import default_ranking_metric
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, send_from_directory
 app = Flask(__name__)
 app.debug = True
 
 print("Files loaded. Now, open in browser.")
+
+@app.route('/images/<path:path>')
+def send_image(path):
+    return send_from_directory('images', path)
 
 @app.route('/', methods=['GET','POST'])
 def search():  
