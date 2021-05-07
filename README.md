@@ -18,7 +18,7 @@ Experience the live website at [acadsearch.pythonanywhere.com](https://acadsearc
 **[How to Install and Run](#how-to-install-and-run)**<br>
 **[References and Credits](#references-and-credits)**<br>
 
-### Motivation
+## Motivation
 
 Students often find the need to search for professors based on various criteria
 such as name, university, research topics, top cited papers and rank them based
@@ -27,7 +27,7 @@ first shortlist professors based on whether they do research in "adversarial mac
 learning" and then rank them according to the number of citations that they have
 in the last 5 years
 
-### What we have built?
+## What we have built?
 
 We have developed a search engine that can cater to the needs
 of students looking for professors to approach for projects, internships or jobs.
@@ -37,7 +37,7 @@ allows users to sort the search results based on criteria like h-index, citation
 last 5 years etc. We have deployed the search engine publicly as a web application,
 and also evaluated its performance in terms of time and quality of results.
 
-### Working Snapshots
+## Working Snapshots
 
 ![SS2](snapshot-2.png)
 
