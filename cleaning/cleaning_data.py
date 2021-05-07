@@ -23,13 +23,19 @@ for file_index in range(file_count):
     
     for prof_index in range(number_of_professors):            
 
+        # Name and id of the professor
         scholar_id = input_file.iloc[prof_index][0]
         name = check_for_nan(input_file.iloc[prof_index][1])
-        image_url = check_for_nan(input_file.iloc[prof_index][2])
+
+        # Affiliation, email and homepage of the professor
         affiliation = check_for_nan(input_file.iloc[prof_index][3])
         email = check_for_nan(input_file.iloc[prof_index][4])
         homepage = check_for_nan(input_file.iloc[prof_index][5])
+
+        # List of research topics listed by professor
         topics_list = make_list(input_file.iloc[prof_index][6])
+
+        # Citations, h-index and i10-index of the professor, all time and over the last five years.
         cit = int(input_file.iloc[prof_index][7])
         h_ind = int(input_file.iloc[prof_index][8])
         i_ind = int(input_file.iloc[prof_index][9])
@@ -37,7 +43,11 @@ for file_index in range(file_count):
         h_ind5 = int(input_file.iloc[prof_index][11])
         i_ind5 = int(input_file.iloc[prof_index][12])    
         cit_list = make_list_citations(input_file.iloc[prof_index][13])
+
+        # Image URL on the professor's Google Scholar page, if provided.
         image_url = check_for_nan(input_file.iloc[prof_index][14])
+
+        # List of papers co-authored by the professor and their URLs.
         papers_url_list = make_list(input_file.iloc[prof_index][15])
         papers_title_list = make_list(input_file.iloc[prof_index][16])              
 
