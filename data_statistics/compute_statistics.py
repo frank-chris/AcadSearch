@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import json
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 file_count = 10
 
@@ -40,30 +41,25 @@ def compute_and_plot_statistics():
     for value in index_dict.values():
         word_frequencies.append(len(value))
 
+    colors = ['#394fe1', '#010038']
     # frequency distribution histogram
-    fig = go.Figure(data=[go.Histogram(x=word_frequencies)])
+    fig = go.Figure(data=[go.Histogram(x=word_frequencies, marker_color=colors[0])])
     fig.update_layout(title_text='No. of words with frequency k as a function of k', xaxis_title='k', yaxis_title='no. of words with frequency k')
     fig.show()
 
-    # pie chart 1
-    labels = ['Affiliation provided', 'Affiliation not provided']
+    # pie charts
+    fig = make_subplots(rows=1, cols=3, specs=[[{'type':'domain'}, {'type':'domain'}, {'type':'domain'}]], 
+                        subplot_titles=['Affiliation provided?', 'Email verified?', 'Homepage provided?'])
+    labels = ['Yes', 'No']
+    # pie 1
     values = [stats['total_affiliation_count'], stats['total_prof_count']-stats['total_affiliation_count']]
-    fig = go.Figure(data=[go.Pie(labels=labels, textinfo='value+percent', values=values, hole=.3)])
-    fig.update_layout(title_text='Percentage of professors who provided affiliation')
-    fig.show()
-
-    # pie chart 2
-    labels = ['Email verified', 'Email not verified']
+    fig.add_trace(go.Pie(labels=labels, textinfo='value+percent', values=values, hole=.3, marker_colors=colors, name='Affiliation provided?'), 1, 1)
+    # pie 2
     values = [stats['total_verified_count'], stats['total_prof_count']-stats['total_verified_count']]
-    fig = go.Figure(data=[go.Pie(labels=labels, textinfo='value+percent', values=values, hole=.3)])
-    fig.update_layout(title_text='Percentage of professors with email verified accounts')
-    fig.show()
-
-    # pie chart 3
-    labels = ['Homepage provided', 'Homepage not provided']
+    fig.add_trace(go.Pie(labels=labels, textinfo='value+percent', values=values, hole=.3, marker_colors=colors, name='Email verified?'), 1, 2)
+    # pie 3
     values = [stats['total_homepage_count'], stats['total_prof_count']-stats['total_homepage_count']]
-    fig = go.Figure(data=[go.Pie(labels=labels, textinfo='value+percent', values=values, hole=.3)])
-    fig.update_layout(title_text='Percentage of professors who provided homepage')
+    fig.add_trace(go.Pie(labels=labels, textinfo='value+percent', values=values, hole=.3, marker_colors=colors, name='Homepage provided?'), 1, 3)
     fig.show()
 
     # bar chart 1
@@ -71,8 +67,8 @@ def compute_and_plot_statistics():
     y_1 = [stats['cit_mean'], stats['cit_median']]
     y_2 = [stats['cit_5_mean'], stats['cit_5_median']]
     fig = go.Figure(data=
-            [go.Bar(name='Overall', x=statistic, y=y_1, text=y_1, textposition='auto'),
-            go.Bar(name='Last 5 years', x=statistic, y=y_2, text=y_2, textposition='auto')
+            [go.Bar(name='Overall', x=statistic, y=y_1, text=y_1, textposition='auto', marker_color=colors[0]),
+            go.Bar(name='Last 5 years', x=statistic, y=y_2, text=y_2, textposition='auto', marker_color=colors[1])
             ])
     fig.update_layout(title_text='No. of citations', barmode='group')
     fig.show()
@@ -81,8 +77,8 @@ def compute_and_plot_statistics():
     y_1 = [stats['h_ind_mean'], stats['h_ind_median']]
     y_2 = [stats['h_ind_5_mean'], stats['h_ind_5_median']]
     fig = go.Figure(data=
-            [go.Bar(name='Overall', x=statistic, y=y_1, text=y_1, textposition='auto'),
-            go.Bar(name='Last 5 years', x=statistic, y=y_2, text=y_2, textposition='auto')
+            [go.Bar(name='Overall', x=statistic, y=y_1, text=y_1, textposition='auto', marker_color=colors[0]),
+            go.Bar(name='Last 5 years', x=statistic, y=y_2, text=y_2, textposition='auto', marker_color=colors[1])
             ])
     fig.update_layout(title_text='h-index', barmode='group')
     fig.show()
@@ -91,8 +87,8 @@ def compute_and_plot_statistics():
     y_1 = [stats['i_ind_mean'], stats['i_ind_median']]
     y_2 = [stats['i_ind_5_mean'], stats['i_ind_5_median']]
     fig = go.Figure(data=
-            [go.Bar(name='Overall', x=statistic, y=y_1, text=y_1, textposition='auto'),
-            go.Bar(name='Last 5 years', x=statistic, y=y_2, text=y_2, textposition='auto')
+            [go.Bar(name='Overall', x=statistic, y=y_1, text=y_1, textposition='auto', marker_color=colors[0]),
+            go.Bar(name='Last 5 years', x=statistic, y=y_2, text=y_2, textposition='auto', marker_color=colors[1])
             ])
     fig.update_layout(title_text='i10-index', barmode='group')
     fig.show()
