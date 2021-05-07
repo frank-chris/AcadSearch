@@ -11,6 +11,15 @@ prof_topic_and_paper_index = dict()
 prof_name_and_affiliation_index = dict()
 
 def build_index_helper(prof_id, string1, string2, remove_stop_words_and_perform_stemming, index):    
+    '''
+    Helper function for building index
+
+    Input:
+    > string1 - name or the string containing list of topics
+    > string2 - affiliation or string containing papers of the professor
+    > remove_stop_words_and_perform_stemming - if true, remove stop words and perform stemming. True for name and affiliation of the professor since they can be international names not found in the library containing stop words.
+    > index - the respective inverted index
+    '''
     string_for_index_building = string1+" "+string2
     words = get_tokenized_words(string_for_index_building,remove_stop_words_and_perform_stemming)        
     for position_index, key in zip(range(len(words)), words):
@@ -20,6 +29,16 @@ def build_index_helper(prof_id, string1, string2, remove_stop_words_and_perform_
             index[key] = [(prof_id, position_index)]    
 
 def build_index(prof_id, name, affiliation, topics_list, papers_title_list):      
+    '''
+    Builds an inverted index based on the parameters given.
+
+    Input:
+    > prof_id - the unique id given to every professor(will be similar to a doc_id in our index).
+    > name - name of professor.
+    > affiliation - affiliation of the professor (such as a university).
+    > topics_list - list of all topics that they have listed as research interests.
+    > papers_title_list - list of paper titles authored by them.
+    '''
     # Name and Affiliation Index
     build_index_helper(prof_id, name, affiliation, False, prof_name_and_affiliation_index)
 
@@ -29,9 +48,24 @@ def build_index(prof_id, name, affiliation, topics_list, papers_title_list):
     build_index_helper(prof_id, topics_string, papers_string, True, prof_topic_and_paper_index)  
 
 def make_list(initial_string):
+    '''
+    Create a list from a string obtained from the html parser
+
+    Input:
+    > initial_string - a given string that represents a list. We create an actual python list from it.
+    '''
     return initial_string.lstrip('[\'').rstrip('\']').split('\', \'')
 
 def make_list_citations(initial_string):
+    '''
+    Return a list of citations
+
+    Input:
+    > initial_string - a list of citations(of type string)
+
+    Output:
+    > a python list of the citations
+    '''
     try:
         return list(map(int,initial_string.lstrip('[').rstrip(']').split(', ')))
     except:

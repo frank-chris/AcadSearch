@@ -18,6 +18,7 @@ def extract_prof_info(scholar_id):
     Output:
     > a tuple consisting of the scraped information if page is found where first entry of tuple is True/False depending on data is found or not    
     '''
+
     # example url = 'https://scholar.google.com/citations?user=-mM5PJAAAAAJ&pagesize=100'
     url_base = 'https://scholar.google.com/citations?user='
     url = url_base + scholar_id + '&pagesize=100'
@@ -33,6 +34,7 @@ def extract_prof_info(scholar_id):
     except:
         return (False, '', '', '', '', '', [], 0, 0, 0, 0, 0, 0, [], '', [], []) 
 
+    # Parsing the html page using the BeautifulSoup object
     try:           
         right_box = soup.find_all("td", class_ = 'gsc_rsb_std')    
         cit = int(right_box[0].string)
@@ -89,9 +91,18 @@ def extract_prof_info(scholar_id):
         papers_url_list = []
         papers_title_list = []
     
+    # For a given professor, we store the given data.
+    # The variable names are self-explanatory.
     return (True, name, image_url, affiliation, email, homepage, topics_list, cit, h_ind, i_ind, cit5, h_ind5, i_ind5, cit_list, image_url, papers_url_list, papers_title_list)
 
 def write_prof_data_to_csv(professor_file, professor_data_to_write):
+    '''
+    Write the data obtained into a csv file.
+
+    Input:
+    > professor_file - csv file where the data is to be written
+    > professor_data_to_write - the actual data that is to be written
+    '''
 
     try:
         write = csv.writer(professor_file)
