@@ -15,6 +15,7 @@ Experience the live website at [acadsearch.pythonanywhere.com](https://acadsearc
 **[Presentation and Demo Video]()**<br>
 **[Future Work](#future-work)**<br>
 **[Code Structure](#code-structure)**<br>
+**[How to Install and Run](#how-to-install-and-run)**<br>
 **[References and Credits](#references-and-credits)**<br>
 
 ### Motivation
@@ -145,6 +146,8 @@ and also evaluated its performance in terms of time and quality of results.
     └── templates
         └── index.html
 ```
+
+### How to Install and Run
 
 ### References and Credits
 
