@@ -60,6 +60,15 @@ def check_for_nan(input_string):
         return input_string
 
 def make_list(initial_string):   
+    '''
+    Function to remove HTML and SVG tags from raw HTML parsed string.
+
+    Input:
+    > initial_string - raw HTML string.
+
+    Output:
+    > list of items obtained from the strings after the HTML and SVG tags have been removed.
+    '''
 
     svg_tag = re.compile(", <svg.*svg>, '")     
     html_tags = re.compile(", <.*>, '") 
@@ -73,6 +82,9 @@ def make_list(initial_string):
     return splitter.split(plain_text.lstrip('[\'').rstrip('\']'))     
 
 def make_list_citations(initial_string):
+    '''
+    Helper function for creating a python list of citations from the raw HTML string obtained from a professor's webpage.
+    '''
     try:
         return list(map(int,initial_string.lstrip('[').rstrip(']').split(', ')))
     except:
