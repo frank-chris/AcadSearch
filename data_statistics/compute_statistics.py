@@ -4,45 +4,108 @@ import json
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+# number of cleaned files
 file_count = 10
 
+# read the cleaned csv files 
 data_files = [pd.read_csv('../data/professor_data-'+str(file_index)+'-cleaned.csv',header=None,encoding='utf8') for file_index in range(file_count) ]
 
+# load topic_and_paper inverted_index
 with open('../data/topic_and_paper_index_full.json') as f:
     index_dict = json.load(f)
 
 def make_list(initial_string):
+    '''
+    Function to convert str(list) to list
+
+    Input:
+    > initial_string - a list type-casted as str
+
+    Output:
+    > list of items from the str-type-casted list
+    '''
     return initial_string.lstrip('[\'').rstrip('\']').split('\', \'')
 
 def compute_and_plot_statistics():
+    '''
+    Function to compute and plot several statistics of the cleaned data
+
+    Input:
+    > None
+
+    Output:
+    > dictionary containing statistics about the cleaned data
+    '''
+
+    # combine all csv files
     data_df = pd.concat(data_files)
+    # dictionary to store statistics
     stats = dict()
+
+    # total number of professors
     stats['total_prof_count'] = data_df[1].size
+
+    # number of unique affiliations/institutes
     stats['unique_affiliation_count'] = data_df[3].nunique()
+
+    # total number of professors who provided affiliation
     stats['total_affiliation_count'] = data_df[3].count()
+
+    # total number of professors with verified email
     stats['total_verified_count'] = data_df[4].count()
+
+    # total number of professors who provided homepage
     stats['total_homepage_count'] = data_df[5].count()
+
+    # number of unique papers in dataset
     stats['unique_paper_count'] = (data_df[16].apply(make_list)).apply(pd.Series).stack().reset_index(drop=True).nunique()
+    
+    # sum of number of papers of all professors in dataset
     stats['total_paper_count'] = ((data_df[16].apply(make_list)).apply(len)).sum()
+    
+    # mean number of citations overall
     stats['cit_mean'] = round(data_df[7].mean(), 2)
+
+    # mean h-index overall
     stats['h_ind_mean'] = round(data_df[8].mean(), 2)
+    
+    # mean i10-index overall
     stats['i_ind_mean'] = round(data_df[9].mean(), 2)
+    
+    # median number of citations overall
     stats['cit_median'] = int(data_df[7].median())
+    
+    # median h-index overall
     stats['h_ind_median'] = int(data_df[8].median())
+    
+    # median i10-index overall
     stats['i_ind_median'] = int(data_df[9].median())
+    
+    # mean number of citations - last 5 years
     stats['cit_5_mean'] = round(data_df[10].mean(), 2)
+    
+    # mean h-index - last 5 years
     stats['h_ind_5_mean'] = round(data_df[11].mean(), 2)
+    
+    # mean i10-index - last 5 years
     stats['i_ind_5_mean'] = round(data_df[12].mean(), 2)
+    
+    # median number of citations - last 5 years
     stats['cit_5_median'] = int(data_df[10].median())
+
+    # median h-index - last 5 years
     stats['h_ind_5_median'] = int(data_df[11].median())
+
+    # median i10-index - last 5 years
     stats['i_ind_5_median'] = int(data_df[12].median())
 
+    # frequency of each word
     word_frequencies = []
     for value in index_dict.values():
         word_frequencies.append(len(value))
 
     colors = ['#394fe1', '#010038']
-    # frequency distribution histogram
+    # frequency distribution histogram - no. of words with frequency k vs k
     fig = go.Figure(data=[go.Histogram(x=word_frequencies, marker_color=colors[0])])
     fig.update_layout(title_text='No. of words with frequency k as a function of k', xaxis_title='k', yaxis_title='no. of words with frequency k')
     fig.show()
@@ -96,6 +159,7 @@ def compute_and_plot_statistics():
     return stats
     
 stats = compute_and_plot_statistics()
+# print computed statistics
 for key, value in stats.items():
     print(key, ':', value)
 

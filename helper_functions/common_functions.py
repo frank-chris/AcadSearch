@@ -14,7 +14,9 @@ M = 5000
 def get_tokenized_words(sentence, remove_stop_words_and_perform_stemming):      
     '''
     Given a sentence, tokenise it.
-    Remove stop words (such as "the", "that", etc) and perform stemming(find a simpler word of the form which connects all semantically similar words together; such as science and scientist) if specified.
+    Remove stop words (such as "the", "that", etc) and perform stemming(find a simpler word of
+    the form which connects all semantically similar words together; such as science and
+    scientist) if specified.
 
     Input:
     > sentence - an input sentence
@@ -83,7 +85,8 @@ def make_list(initial_string):
 
 def make_list_citations(initial_string):
     '''
-    Helper function for creating a python list of citations from the raw HTML string obtained from a professor's webpage.
+    Helper function for creating a python list of citations from the raw HTML string obtained
+    from a professor's webpage.
     '''
     try:
         return list(map(int,initial_string.lstrip('[').rstrip(']').split(', ')))
@@ -99,15 +102,18 @@ The following two functions help us to go back and forth between the two.
 
 def get_file_index_and_prof_index(id):
     '''
-    Given the global ID(created by us) of the professor in question, find their actual file number and index in that file.
+    Given the global ID(created by us) of the professor in question,
+    find their actual file number and index in that file.
 
     Input:
     > id - our global ID assigned to each entry.
 
     Output:
     A tuple containing the following two things-
-    > file_index - the file number(number of the csv) in which this professor's data was given.
-    > prof_index - the index of the entry in question in the csv from which it was originally obtained.
+    > file_index - the file number(number of the csv) in
+    which this professor's data was given.
+    > prof_index - the index of the entry in question in
+    the csv from which it was originally obtained.
     '''
 
     file_index = id // M

@@ -50,13 +50,34 @@ avgquerytime['prof-paper-boolean-retrieval'] = []
 avgquerytime['prof-paper-phrase-retrieval'] = []
 avgquerytime['prof-paper-tf-idf'] = []
 
+# number of cleaned files
 file_count = 10
+
+# read the cleaned csv files 
 data_files = [pd.read_csv('../data/professor_data-'+str(file_index)+'-cleaned.csv',header=None,encoding='utf8') for file_index in range(file_count) ]
 
 def make_list(initial_string):
+    '''
+    Function to convert str(list) to list
+
+    Input:
+    > initial_string - a list type-casted as str
+
+    Output:
+    > list of items from the str-type-casted list
+    '''
     return initial_string.lstrip('[\'').rstrip('\']').split('\', \'')
 
 def find_median(input_list):
+    '''
+    Function to find median of elements in input_list
+
+    Input:
+    > input_list - a list of numbers
+
+    Output:
+    > median of the numbers in input_list
+    '''
     input_list.sort()
     N = len(input_list)    
     if N<=2:
@@ -65,18 +86,45 @@ def find_median(input_list):
         return input_list[(N + 1)//2]
 
 def find_mean(input_list):
+    '''
+    Function to find mean of elements in input_list
+
+    Input:
+    > input_list - a list of numbers
+
+    Output:
+    > mean of the numbers in input_list
+    '''
     N = len(input_list)
     if N==0:
         return -1
     return (sum(input_list)/N)
 
 def generate_random_professor():
+    '''
+    Function to choose a random professor from cleaned dataset
+
+    Input:
+    > None
+
+    Output:
+    > the Global ID of a randomly chosen professor 
+    '''
     list_of_prof_count_per_file = list(pd.read_csv('../data/metadata.csv', header=None)[0])
     file_index = random.randint(0, len(list_of_prof_count_per_file)-1)
     prof_index = random.randint(0, list_of_prof_count_per_file[file_index]-1)
     return get_id(file_index, prof_index)
 
-def read_prof_information(prof_id):   
+def read_prof_information(prof_id):
+    '''
+    Function to read information of the professor indicated by the given Global ID
+
+    Input:
+    > prof_id - Global ID of a professor
+
+    Output:
+    > a dictionary containing information about the professor
+    '''
     file_index, prof_index = get_file_index_and_prof_index(prof_id)
     data = dict()       
     data['name'] = check_for_nan(data_files[file_index].iloc[prof_index][1]).strip()    
@@ -84,7 +132,17 @@ def read_prof_information(prof_id):
     data['papers_title_list'] = make_list(data_files[file_index].iloc[prof_index][16])    
     return data
 
-def find_rank_in_list(prof_ids_list, ground_truth_prof_id):    
+def find_rank_in_list(prof_ids_list, ground_truth_prof_id):
+    '''
+    Function to find the rank at which a Global ID of a professor appears in a list of Global IDs
+
+    Input:
+    > prof_ids_list - list of Global IDs
+    > ground_truth_prof_id - the Global ID you want to find the rank of
+
+    Output:
+    > rank at which ground_truth_prof_id appears in prof_ids_list
+    '''
     index = 0
     for prof_id in prof_ids_list:
         index = index+1
@@ -94,13 +152,37 @@ def find_rank_in_list(prof_ids_list, ground_truth_prof_id):
     return 9999999   
 
 def find_recall_rate(prof_ids_list, ground_truth_prof_id, recall_rate_number):
+    '''
+    Function to check if a Global ID appears in top k entries in a list of Global IDs
+
+    Input:
+    > prof_ids_list - list of Global IDs
+    > ground_truth_prof_id - the Global ID you want to check for
+    > recall_rate_number - the number of top entries in which you
+                            want to check if ground_truth_prof_id is present
+
+    Output:
+    > 1 if found in first recall_rate_number (5 or 10) results, 0 otherwise
+    '''
     # Return 1 if find in first recall_rate_number (5 or 10) results
     for i in range(min(recall_rate_number, len(prof_ids_list))):
         if prof_ids_list[i] == ground_truth_prof_id:
             return 1
     return 0
 
-def search_with_name_or_affiliation(search_query, query_method):   
+def search_with_name_or_affiliation(search_query, query_method):
+    '''
+    Function to search in the name_affiliation inverted index using given
+    search query and query method and return the results and time taken
+
+    Input:
+    > search_query - search query as string
+    > query_method - retrieval method to be used (boolean-retrieval or phrase-retrieval)
+
+    Output:
+    > query_result_prof_ids - search results as a list of Global IDs of professors
+    > time_taken - time taken for query
+    '''
     start_time = time.time() 
     parsed_query = get_tokenized_words(search_query,False) # passing 'False' to not remove stop words and not perform stemming
     if query_method=='boolean-retrieval':
@@ -112,6 +194,18 @@ def search_with_name_or_affiliation(search_query, query_method):
     return (query_result_prof_ids, time_taken)  
 
 def search_with_paper_title(search_query, query_method):
+    '''
+    Function to search in the paper title and topics inverted index using given
+    search query and query method and return the results and time taken
+
+    Input:
+    > search_query - search query as string
+    > query_method - retrieval method to be used (boolean-retrieval, phrase-retrieval or tf-idf)
+
+    Output:
+    > query_result_prof_ids - search results as a list of Global IDs of professors
+    > time_taken - time taken for query
+    '''
     start_time = time.time() 
     parsed_query = get_tokenized_words(search_query,True)
     if query_method=='boolean-retrieval':
