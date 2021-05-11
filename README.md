@@ -11,13 +11,13 @@ The web app is live at [acadsearch.pythonanywhere.com](https://acadsearch.python
 **[Working Snapshots](#working-snapshots)**<br>
 **[High Level Design](#high-level-design)**<br>
 **[Modules of Search Engine](#modules-of-search-engine)**<br>
+**[How to Install and Run](#how-to-install-and-run)**<br>
 **[Work Flow](#work-flow)**<br>
 **[Evaluation of Search Engine](#evaluation-of-search-engine)**<br>
 **[Detailed Report](#detailed-report)**<br>
 **[Presentation Slides and Video](#presentation-slides-and-video)**<br>
-**[Future Work](#future-work)**<br>
 **[Code Directory Structure](#code-directory-structure)**<br>
-**[How to Install and Run](#how-to-install-and-run)**<br>
+**[Future Work](#future-work)**<br>
 **[References and Credits](#references-and-credits)**<br>
 
 ## Motivation
@@ -87,13 +87,100 @@ This module is not part of the main pipeline of the search engine. It computes a
 
 It generates its own queries, runs the queries using "Querying and Ranking" module, evaluates search results and plots the evaluation metrics. This module is also not part of the main pipeline. 
 
+## How to Install and Run
+
+### Installation Requirements
+
+- [Git LFS](https://git-lfs.github.com/)
+- [Python](https://www.python.org/)
+- [Flask](https://flask.palletsprojects.com/en/1.1.x/)
+- [NLTK](https://www.nltk.org/)
+- [Numpy](https://numpy.org/)
+- [Pandas](https://pandas.pydata.org/)
+- [Matplotlib](https://matplotlib.org/)
+
+Then run commands ```nltk.download('punkt')``` and ```nltk.download('stopwords')``` in a Python program or iPython  if these modules are not downloaded.
+
+***This repository contains data files inside folder ```data/``` whose size is >100 MB, such files are being tracked using Git LFS. Hence install [Git LFS](https://git-lfs.github.com/).***
+
+### Commands to Run
+
+Note - Run the commands for the modules in the given order since next modules uses output files from previous module. All the commands should be run inside the directory specified for each module.
+
+#### Scrapping
+
+```
+cd scraping/
+python scrape_prof_data.py
+```
+
+This module scrapes data from Google Scholar Pages by taking input from ```./data/csrankings-{x}.csv``` and outputing scraped data in ```./data/professor_data-{x}.csv```. Scraping could take too much time hence we recommend not to run these commands instead use directly use the already scraped data. ```x``` varies from 0 to 9. In the below commands ```python``` should be changed to ```python3``` if using Ubuntu/Linux.
+ 
+#### Cleaning
+
+```
+cd cleaning/
+python cleaning_data.py
+```
+
+This module cleans the scraped data by taking input from ```./data/professor_data-{x}.csv``` and outputing cleaned data in ```./data/professor_data-{x}-cleaned.csv```.
+
+#### Building Index
+
+```
+cd indexing/
+python build_index.py
+```
+
+This module takes as input the files ```./data/professor_data-{x}-cleaned.csv``` and build indices ```./data/name_and_affiliation_index_full.json``` and ```./data/topic_and_paper_index_full.json```
+
+#### Precomputation for TF-IDF
+
+```
+cd querying/
+python compute_tf_idf.py
+```
+
+This module takes as input the files ```./data/topic_and_paper_index_full.json``` and ```./data/metadata.csv``` and computes TF-IDF values for every document-term pair if it exists. It then outputs these values in file ```./data/tf_idf_scores_topic_and_paper_full.json``` which is used while querying using tf-idf retrieval method.
+
+
+#### Web Server
+
+```
+cd web_server
+python -m flask run
+```
+
+This module runs the web app on localhost (127.0.0.1:5000). The user can now interact with the Search Engine. With this module the main pipeline of Search Engine completes. The next two modules are used for computing statistics from the data and evaluating the Search Engine and are not part of the main pipeline. 
+
+The live version of the web app at [acadsearch.pythonanywhere.com](https://acadsearch.pythonanywhere.com) is currently running on 80% of total dataset of the professors due to memory limits on hosting platform. The full version can be run on localhost by using the instructions mentioned above.
+
+#### Evaluation
+
+```
+cd evaluation
+python evaluate.py
+```
+
+This module queries and evaluate the Search Engine using Querying module. It evaluates median rank, recall rate and average time per query. The plots ```./evaluation/average_query_time.png```, ```./evaluation/median_rank.png``` and ```./evaluation/recall_rate.png``` are generated as output.
+
+#### Data Statistics
+
+```
+cd data_statistics
+python compute_statictics.py
+```
+
+This module takes as input the data files present in ```./data``` and computes their statistics. The plots ```./data_statistics/plots/1.png```, ```./data_statistics/plots/2.png```, ```./data_statistics/plots/3.png```, ```./data_statistics/plots/4.png```, and ```./data_statistics/plots/5.png``` are generated as output.
+
+
 ## Work Flow
 
 ![SS2](flow-chart.png)
 
 ## Evaluation of Search Engine
 
-Consider a user who has a particular professor in his mind, he using some information of that professor like name, affiliation, or title of a paper of that professor, and by choosing appropriate querying method (mentioned in Querying and Ranking) searches and gets results. Now, we define the \emph{rank} as the position where the professor he had in mind shows up in the search results. Here, the professor in his mind is the ground truth.
+Consider a user who has a particular professor in his mind, he using some information of that professor like name, affiliation, or title of a paper of that professor, and by choosing appropriate querying method (mentioned in Querying and Ranking) searches and gets results. Now, we define the **rank** as the position where the professor he had in mind shows up in the search results. Here, the professor in his mind is the ground truth.
 
 We generated random 500 Professors and queried the search engine using the search query and retrieval method pairs given below. The appropriate index i.e. name and affiliation or research topics and paper titles was used for each combination. Since, we already had the unique ID of the Professors before querying, we lookup for that unique ID in the matched Professors IDs returned by Querying and Ranking module. 
 
@@ -128,17 +215,9 @@ The report can be accessed from [here](Report.pdf)
 
 ## Presentation Slides and Video
 
-- The presentation slides can be accessed from [here (PDF)](Slides.pdf) and [here (PPTX)](Slides.pptx)
+- The presentation slides can be accessed from [here (PDF)](Slides.pdf) and [here (PPTX)](slides.pptx)
 - The video can be accessed from [here](https://www.youtube.com/watch?v=REV_GJ80Q5k)
 
-
-## Future Work
-
-* Scraping data from homepages of professors and universities, periodically.
-* Making a directed graph using citations e.g. if a professor (in one of his papers) cites another professor's paper then it can be a directed edge. This graph can then be used to implement Pagerank.
-* Improving user experience by adding search history and providing suggestions based on collaborative filtering.
-* Making the default ranking metric(for Phrase and Boolean Retrieval) learn-able based on user feedback on search results.
-* Evaluating the search engine with real users.
 
 ## Code Directory Structure
 
@@ -233,91 +312,13 @@ The report can be accessed from [here](Report.pdf)
         └── index.html
 ```
 
-## How to Install and Run
+## Future Work
 
-### Installation Requirements
-
-- [Git LFS](https://git-lfs.github.com/)
-- [Python](https://www.python.org/)
-- [Flask](https://flask.palletsprojects.com/en/1.1.x/)
-- [NLTK](https://www.nltk.org/)
-- [Numpy](https://numpy.org/)
-- [Pandas](https://pandas.pydata.org/)
-- [Matplotlib](https://matplotlib.org/)
-
-Then run commands ```nltk.download('punkt')``` and ```nltk.download('stopwords')``` in a Python program or iPython  if these modules are not downloaded.
-
-***This repository contains data files inside folder ```data/``` whose size is >100 MB, such files are being tracked using Git LFS. Hence install [Git LFS](https://git-lfs.github.com/).***
-
-### Commands to Run
-
-Note - Run the commands for the modules in the given order since next modules uses output files from previous module. All the commands should be run inside the directory specified for each module.
-
-#### Scrapping
-
-```
-cd scraping/
-python scrape_prof_data.py
-```
-
-This module scrapes data from Google Scholar Pages by taking input from ```./data/csrankings-{x}.csv``` and outputing scraped data in ```./data/professor_data-{x}.csv```. Scraping could take too much time hence we recommend not to run these commands instead use directly use the already scraped data. ```x``` varies from 0 to 9. In the below commands ```python``` should be changed to ```python3``` if using Ubuntu/Linux.
- 
-#### Cleaning
-
-```
-cd cleaning/
-python cleaning_data.py
-```
-
-This module cleans the scraped data by taking input from ```./data/professor_data-{x}.csv``` and outputing cleaned data in ```./data/professor_data-{x}-cleaned.csv```.
-
-#### Building Index
-
-```
-cd indexing/
-python build_index.py
-```
-
-This module takes as input the files ```./data/professor_data-{x}-cleaned.csv``` and build indices ```./data/name_and_affiliation_index_full.json``` and ```./data/topic_and_paper_index_full.json```
-
-#### Precomputation for TF-IDF
-
-```
-cd querying/
-python compute_tf_idf.py
-```
-
-This module takes as input the files ```./data/topic_and_paper_index_full.json``` and ```./data/metadata.csv``` and computes TF-IDF values for every document-term pair if it exists. It then outputs these values in file ```./data/tf_idf_scores_topic_and_paper_full.json``` which is used while querying using tf-idf retrieval method.
-
-
-#### Web Server
-
-```
-cd web_server
-python -m flask run
-```
-
-This module runs the web app on localhost (127.0.0.1:5000). The user can now interact with the Search Engine. With this module the main pipeline of Search Engine completes. The next two modules are used for computing statistics from the data and evaluating the Search Engine and are not part of the main pipeline. 
-
-The live version of the web app at [acadsearch.pythonanywhere.com](https://acadsearch.pythonanywhere.com) is currently running on 80% of total dataset of the professors due to memory limits on hosting platform. The full version can be run on localhost by using the instructions mentioned above.
-
-#### Evaluation
-
-```
-cd evaluation
-python evaluate.py
-```
-
-This module queries and evaluate the Search Engine using Querying module. It evaluates median rank, recall rate and average time per query. The plots ```./evaluation/average_query_time.png```, ```./evaluation/median_rank.png``` and ```./evaluation/recall_rate.png``` are generated as output.
-
-#### Data Statistics
-
-```
-cd data_statistics
-python compute_statictics.py
-```
-
-This module takes as input the data files present in ```./data``` and computes their statistics. The plots ```./data_statistics/plots/1.png```, ```./data_statistics/plots/2.png```, ```./data_statistics/plots/3.png```, ```./data_statistics/plots/4.png```, and ```./data_statistics/plots/5.png``` are generated as output.
+* Scraping data from homepages of professors and universities, periodically.
+* Making a directed graph using citations e.g. if a professor (in one of his papers) cites another professor's paper then it can be a directed edge. This graph can then be used to implement Pagerank.
+* Improving user experience by adding search history and providing suggestions based on collaborative filtering.
+* Making the default ranking metric(for Phrase and Boolean Retrieval) learn-able based on user feedback on search results.
+* Evaluating the search engine with real users.
 
 ## References and Credits
 
