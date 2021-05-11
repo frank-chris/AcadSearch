@@ -119,6 +119,7 @@ The report can be accessed from [here](Report.pdf)
 ## Code Directory Structure
 
 ```
+.
 ├── Proposal.pdf        
 ├── README.md
 ├── Report.pdf
@@ -140,11 +141,11 @@ The report can be accessed from [here](Report.pdf)
 │   ├── name_and_affiliation_index_full.json
 │   ├── professor_data-0-cleaned.csv        
 │   ├── professor_data-0.csv
-│   ├── professor_data-1-cleaned.csv        
+│   ├── professor_data-1-cleaned.csv
 │   ├── professor_data-1.csv
-│   ├── professor_data-2-cleaned.csv        
+│   ├── professor_data-2-cleaned.csv
 │   ├── professor_data-2.csv
-│   ├── professor_data-3-cleaned.csv        
+│   ├── professor_data-3-cleaned.csv
 │   ├── professor_data-3.csv
 │   ├── professor_data-4-cleaned.csv
 │   ├── professor_data-4.csv
@@ -167,15 +168,7 @@ The report can be accessed from [here](Report.pdf)
 │       ├── 2.png
 │       ├── 3.png
 │       ├── 4.png
-│       ├── 5.png
-│       └── old
-│           ├── 1.png
-│           ├── 2.png
-│           ├── 3.png
-│           ├── 4.png
-│           ├── 5.png
-│           ├── 6.png
-│           └── 7.png
+│       └── 5.png
 ├── evaluation
 │   ├── average_query_time.png
 │   ├── evaluate.py
