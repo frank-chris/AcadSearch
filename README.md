@@ -15,7 +15,7 @@ The web app is live at [acadsearch.pythonanywhere.com](https://acadsearch.python
 **[Detailed Report](#detailed-report)**<br>
 **[Presentation Slides and Video](#presentation-slides-and-video)**<br>
 **[Future Work](#future-work)**<br>
-**[Code Directory Structure](#code-structure)**<br>
+**[Code Directory Structure](#code-directory-structure)**<br>
 **[How to Install and Run](#how-to-install-and-run)**<br>
 **[References and Credits](#references-and-credits)**<br>
 
@@ -234,7 +234,7 @@ cd scraping/
 python scrape_prof_data.py
 ```
 
-This module scrapes data from Google Scholar Pages by taking input from ```./data/csrankings-{x}.csv``` and outputing scraped data in ```./data/professor_data-{x}.csv```. Scraping could take too much time hence we recommend not to run these commands instead use directly use the already scraped data. ```x``` varies from 0 to 9
+This module scrapes data from Google Scholar Pages by taking input from ```./data/csrankings-{x}.csv``` and outputing scraped data in ```./data/professor_data-{x}.csv```. Scraping could take too much time hence we recommend not to run these commands instead use directly use the already scraped data. ```x``` varies from 0 to 9. In the below commands ```python``` should be changed to ```python3``` if using Ubuntu/Linux.
  
 #### Cleaning
 
@@ -271,12 +271,25 @@ cd web_server
 python -m flask run
 ```
 
-This module runs the web app on localhost (127.0.0.1:5000). The user can now interact with the Search Engine.
+This module runs the web app on localhost (127.0.0.1:5000). The user can now interact with the Search Engine. With this module the main pipeline of Search Engine completes. The next two modules are used for computing statistics from the data and evaluating the Search Engine and are not part of the main pipeline.
 
 #### Evaluation
 
+```
+cd evaluation
+python evaluate.py
+```
+
+This module queries and evaluate the Search Engine using Querying module. It evaluates median rank, recall rate and average time per query. The plots ```./evaluation/average_query_time.png```, ```./evaluation/median_rank.png``` and ```./evaluation/recall_rate.png``` are generated as output.
+
 #### Data Statistics
 
+```
+cd data_statistics
+python compute_statictics.py
+```
+
+This module takes as input the data files present in ```./data``` and computes their statistics. The plots ```./data_statistics/plots/1.png```, ```./data_statistics/plots/2.png```, ```./data_statistics/plots/3.png```, ```./data_statistics/plots/4.png```, and ```./data_statistics/plots/5.png``` are generated as output.
 
 ## References and Credits
 
