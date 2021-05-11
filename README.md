@@ -148,6 +148,7 @@ The report can be accessed from [here](Report.pdf)
 ├── README.md
 ├── Report.pdf
 ├── Slides.pdf
+├── Slides.pptx
 ├── cleaning
 │   └── cleaning_data.py
 ├── data
@@ -163,7 +164,7 @@ The report can be accessed from [here](Report.pdf)
 │   ├── csrankings-9.csv
 │   ├── metadata.csv
 │   ├── name_and_affiliation_index_full.json
-│   ├── professor_data-0-cleaned.csv        
+│   ├── professor_data-0-cleaned.csv
 │   ├── professor_data-0.csv
 │   ├── professor_data-1-cleaned.csv
 │   ├── professor_data-1.csv
@@ -200,21 +201,29 @@ The report can be accessed from [here](Report.pdf)
 │   └── recall_rate.png
 ├── flow-chart.png
 ├── helper_functions
+│   ├── __pycache__
+│   │   └── common_functions.cpython-37.pyc
 │   └── common_functions.py
 ├── high-level-architecture.png
 ├── indexing
 │   └── build_index.py
 ├── querying
+│   ├── __pycache__
+│   │   ├── boolean.cpython-37.pyc
+│   │   ├── default_rankings.cpython-37.pyc
+│   │   └── get_tf_idf.cpython-37.pyc
 │   ├── boolean.py
 │   ├── compute_tf_idf.py
 │   ├── default_rankings.py
 │   └── get_tf_idf.py
 ├── scraping
 │   └── scrape_prof_data.py
-├── slides.pptx
 ├── snapshot-1.png
 ├── snapshot-2.png
 └── web_server
+    ├── __pycache__
+    │   ├── read_information.cpython-37.pyc
+    │   └── server.cpython-37.pyc
     ├── images
     │   ├── placeholder.svg
     │   └── search.png
