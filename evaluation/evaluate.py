@@ -313,16 +313,24 @@ for i in tqdm(range(number_of_professors_to_test)):
 for key in recallrate:
     recallrate[key]=(recallrate[key]/count)*100    
 
+# Legend:
+# N, B  : 'Prof Name, Boolean'
+# N, Ph : 'Prof Name, Phrase'
+# A, B  : 'Prof Affiliation, Boolean'
+# A, Ph : 'Prof Affiliation, Phrase'
+# P, B  : 'Prof Paper, Boolean'
+# P, Ph : 'Prof Paper, Phrase'
+# P, T  : 'Prof Paper, TF-IDF'
 
 # Plotting the median rank
-query_and_method = ['Prof Name, Boolean', 'Prof Name, Phrase', 'Prof Affiliation, Boolean', 'Prof Affiliation, Phrase', 'Prof Paper, Boolean', 'Prof Paper, Phrase', 'Prof Paper, TF-IDF']
+query_and_method = ['N, B', 'N, Ph', 'A, B', 'A, Ph', 'P, B', 'P, Ph', 'P, T']
 ranks_value = [find_median(ranks['prof-name-boolean-retrieval']), find_median(ranks['prof-name-phrase-retrieval']), find_median(ranks['prof-affiliation-boolean-retrieval']), find_median(ranks['prof-affiliation-phrase-retrieval']), find_median(ranks['prof-paper-boolean-retrieval']), find_median(ranks['prof-paper-phrase-retrieval']), find_median(ranks['prof-paper-tf-idf'])]
 plt.figure(0)
 plt.bar(query_and_method, ranks_value, color='#394fe1')
 plt.ylabel('Median Rank')
 plt.title('Median rank evaluation for '+str(number_of_professors_to_test)+' ground truths \n Rank represents the position at which desired result appears in search results')
 plt.xlabel('Search Query and Method Used')
-plt.xticks(fontsize=5,rotation=7)
+plt.xticks(fontsize=10,rotation=7)
 for i, v in enumerate(ranks_value):
     plt.annotate(str(v), xy=(i,v), xytext=(-7,7), textcoords='offset points')
 # plt.savefig('median_rank.png', dpi=300)
@@ -332,7 +340,8 @@ plt.show()
 # Plotting the recall rate
 width = 0.25
 
-query_and_method = ['Prof Name, Boolean', 'Prof Name, Phrase', 'Prof Affiliation, Boolean', 'Prof Affiliation, Phrase', 'Prof Paper, Boolean', 'Prof Paper, Phrase', 'Prof Paper, TF-IDF']
+
+query_and_method = ['N, B', 'N, Ph', 'A, B', 'A, Ph', 'P, B', 'P, Ph', 'P, T']
 recall_rate_5 = [recallrate['prof-name-boolean-retrieval-recall-rate-5'],recallrate['prof-name-phrase-retrieval-recall-rate-5'],recallrate['prof-affiliation-phrase-retrieval-recall-rate-5'],recallrate['prof-affiliation-boolean-retrieval-recall-rate-5'],recallrate['prof-paper-boolean-retrieval-recall-rate-5'],recallrate['prof-paper-phrase-retrieval-recall-rate-5'],recallrate['prof-paper-tf-idf-recall-rate-5']]
 recall_rate_10 = [recallrate['prof-name-boolean-retrieval-recall-rate-10'],recallrate['prof-name-phrase-retrieval-recall-rate-10'],recallrate['prof-affiliation-phrase-retrieval-recall-rate-10'],recallrate['prof-affiliation-boolean-retrieval-recall-rate-10'],recallrate['prof-paper-boolean-retrieval-recall-rate-10'],recallrate['prof-paper-phrase-retrieval-recall-rate-10'],recallrate['prof-paper-tf-idf-recall-rate-10']]
 x_1 = [2*i for i in range(len(recall_rate_5))]
@@ -343,7 +352,7 @@ plt.bar(x_2, recall_rate_10, color ='#010038', width = 0.5, edgecolor ='white', 
 plt.ylabel('Recall Rate')
 plt.title('Recall rate evaluation for '+str(number_of_professors_to_test)+' ground truths \n Recall rate (R@X) represents % of time desired results appeared in top X')
 plt.xlabel('Search Query and Method Used')
-plt.xticks([2*i + width for i in range(len(recall_rate_5))],query_and_method, fontsize=5, rotation=7)
+plt.xticks([2*i + width for i in range(len(recall_rate_5))],query_and_method, fontsize=10, rotation=7)
 plt.legend(['Recall Rate @ 5', 'Recall Rate @ 10'])
 # plt.savefig('recall_rate.png', dpi=300)
 plt.show()
@@ -358,14 +367,14 @@ def get_time_in_ms(time_in_s):
     except:
         return value+" ms"
 
-query_and_method = ['Prof Name, Boolean', 'Prof Name, Phrase', 'Prof Affiliation, Boolean', 'Prof Affiliation, Phrase', 'Prof Paper, Boolean', 'Prof Paper, Phrase', 'Prof Paper, TF-IDF']
+query_and_method = ['N, B', 'N, Ph', 'A, B', 'A, Ph', 'P, B', 'P, Ph', 'P, T']
 avg_time_value = [find_mean(avgquerytime['prof-name-boolean-retrieval']), find_mean(avgquerytime['prof-name-phrase-retrieval']), find_mean(avgquerytime['prof-affiliation-boolean-retrieval']), find_mean(avgquerytime['prof-affiliation-phrase-retrieval']), find_mean(avgquerytime['prof-paper-boolean-retrieval']), find_mean(avgquerytime['prof-paper-phrase-retrieval']), find_mean(avgquerytime['prof-paper-tf-idf'])]
 plt.figure(2)
 plt.plot(query_and_method, avg_time_value, 'ro',color='#394fe1')
 plt.ylabel('Average Query Time (in ms)')
 plt.title('Average query time for '+str(number_of_professors_to_test)+' searches')
 plt.xlabel('Search Query and Method Used')
-plt.xticks(fontsize=5,rotation=7)
+plt.xticks(fontsize=10,rotation=7)
 for i, v in enumerate(avg_time_value):
     plt.annotate(get_time_in_ms(v), xy=(i,v), xytext=(-7,7), textcoords='offset points')
 # plt.savefig('average_query_time.png', dpi=300)
