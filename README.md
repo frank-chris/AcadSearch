@@ -53,7 +53,7 @@ and also evaluated its performance in terms of time and quality of results.
 
 ![SS2](flow-chart.png)
 
-## Evaluation
+## Evaluation Metrics
 
 ## Future Work
 
@@ -147,9 +147,57 @@ and also evaluated its performance in terms of time and quality of results.
         └── index.html
 ```
 
-### How to Install and Run
+## How to Install and Run
 
-### References and Credits
+### Installation Requirements
+
+Install [Python](https://www.python.org/), [Flask](https://flask.palletsprojects.com/en/1.1.x/), [NLTK](https://www.nltk.org/), [Numpy](https://numpy.org/), [Pandas](https://pandas.pydata.org/), [Matplotlib](https://matplotlib.org/).
+
+Then run commands ```nltk.download('punkt')``` and ```nltk.download('stopwords')``` in a python file if these modules are not downloaded.
+
+### Run
+
+Note - Run the commands for the modules in the given order since next modules users output files from previous module.
+
+#### Scrapping
+
+```
+cd scraping/
+python scrape_prof_data.py
+```
+
+This module scrapes data from Google Scholar Pages by taking input from ```./data/csrankings-{x}.csv``` and outputing scraped data in ```./data/professor_data-{x}.csv```. Scraping could take too much time hence we recommend not to run these commands instead use directly use the already scraped data.
+
+#### Cleaning
+
+```
+cd cleaning/
+python cleaning_data.py
+```
+
+This module cleans the scraped data by taking input from ```./data/professor_data-{x}.csv``` and outputing cleaned data in ```./data/professor_data-{x}-cleaned.csv```.
+
+#### Building Index
+
+```
+cd indexing/
+python build_index.py
+```
+
+This module takes as input the files ```./data/professor_data-{x}-cleaned.csv``` and build indices ```./data/name_and_affiliation_index_full.json``` and ```./data/topic_and_paper_index_full.json```
+
+#### Precomputation for Querying
+
+
+
+#### Web Server
+
+#### Evaluation
+
+#### Data Statistics
+
+
+## References and Credits
 
 This project has been made as a part of project component of the course **Introduction to Data Science** offered at IIT Gandhinagar in Semester-2 AY 2020-21 under the guidance of **Prof. Anirban Dasgupta**.
 
