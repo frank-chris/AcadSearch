@@ -1,20 +1,21 @@
 # Acad Search
 
-Experience the live website at [acadsearch.pythonanywhere.com](https://acadsearch.pythonanywhere.com)
+The web app is live at [acadsearch.pythonanywhere.com](https://acadsearch.pythonanywhere.com). We recommend opening in Desktop.
 
 ## Table of Contents
 
 **[Motivation](#motivation)**<br>
-**[What we have built?](#what-we-have-built?)**<br>
+**[Proposal](#proposal)**<br>
+**[What we have built](#what-we-have-built)**<br>
 **[Working Snapshots](#working-snapshots)**<br>
 **[High Level Design](#high-level-design)**<br>
 **[Modules of Search Engine](#modules-of-search-engine)**<br>
 **[Work Flow](#work-flow)**<br>
-**[Evaluation Metrics](#evaluation)**<br>
-**[Detailed Report](https://github.com/nishikantparmariam/Data-Science-Project/blob/main/Report.pdf)**<br>
-**[Presentation and Demo Video]()**<br>
+**[Evaluation of Search Engine](#evaluation-of-search-engine)**<br>
+**[Detailed Report](#detailed-report)**<br>
+**[Presentation Slides and Video](#presentation-slides-and-video)**<br>
 **[Future Work](#future-work)**<br>
-**[Code Structure](#code-structure)**<br>
+**[Code Directory Structure](#code-structure)**<br>
 **[How to Install and Run](#how-to-install-and-run)**<br>
 **[References and Credits](#references-and-credits)**<br>
 
@@ -25,9 +26,13 @@ such as name, university, research topics, top cited papers and rank them based
 on factors like citations or h-index. A simple Google search may not allow you to
 first shortlist professors based on whether they do research in "adversarial machine
 learning" and then rank them according to the number of citations that they have
-in the last 5 years
+in the last 5 years.
 
-## What we have built?
+## Proposal
+
+Our proposal can be accessed from [here](Proposal.pdf)
+
+## What we have built
 
 We have developed a search engine that can cater to the needs
 of students looking for professors to approach for projects, internships or jobs.
@@ -85,13 +90,23 @@ It generates its own queries, runs the queries using "Querying and Ranking" modu
 
 ![SS2](flow-chart.png)
 
-## Evaluation Metrics
+## Evaluation of Search Engine
 
 ![MR](evaluation/median_rank.png)
 
 ![RR](evaluation/recall_rate.png)
 
 ![AQT](evaluation/average_query_time.png)
+
+## Detailed Report
+
+The report can be accessed from [here](Report.pdf)
+
+## Presentation Slides and Video
+
+- The presentation slides can be accessed from [here (PDF)](slides.pdf) and [here (PPTX)](slides.pptx)
+- The video can be accessed from [here](youtube)
+
 
 ## Future Work
 
@@ -101,13 +116,13 @@ It generates its own queries, runs the queries using "Querying and Ranking" modu
 * Making the default ranking metric(for Phrase and Boolean Retrieval) learn-able based on user feedback on search results.
 * Evaluating the search engine with real users.
 
-## Code Structure
+## Code Directory Structure
 
 ```
-.
-├── Proposal.pdf
+├── Proposal.pdf        
 ├── README.md
 ├── Report.pdf
+├── Slides.pdf
 ├── cleaning
 │   └── cleaning_data.py
 ├── data
@@ -131,9 +146,9 @@ It generates its own queries, runs the queries using "Querying and Ranking" modu
 │   ├── professor_data-2.csv
 │   ├── professor_data-3-cleaned.csv        
 │   ├── professor_data-3.csv
-│   ├── professor_data-4-cleaned.csv        
+│   ├── professor_data-4-cleaned.csv
 │   ├── professor_data-4.csv
-│   ├── professor_data-5-cleaned.csv        
+│   ├── professor_data-5-cleaned.csv
 │   ├── professor_data-5.csv
 │   ├── professor_data-6-cleaned.csv
 │   ├── professor_data-6.csv
@@ -179,6 +194,7 @@ It generates its own queries, runs the queries using "Querying and Ranking" modu
 │   └── get_tf_idf.py
 ├── scraping
 │   └── scrape_prof_data.py
+├── slides.pptx
 ├── snapshot-1.png
 ├── snapshot-2.png
 └── web_server
@@ -195,13 +211,21 @@ It generates its own queries, runs the queries using "Querying and Ranking" modu
 
 ### Installation Requirements
 
-Install [Python](https://www.python.org/), [Flask](https://flask.palletsprojects.com/en/1.1.x/), [NLTK](https://www.nltk.org/), [Numpy](https://numpy.org/), [Pandas](https://pandas.pydata.org/), [Matplotlib](https://matplotlib.org/).
+- [Git LFS](https://git-lfs.github.com/)
+- [Python](https://www.python.org/)
+- [Flask](https://flask.palletsprojects.com/en/1.1.x/)
+- [NLTK](https://www.nltk.org/)
+- [Numpy](https://numpy.org/)
+- [Pandas](https://pandas.pydata.org/)
+- [Matplotlib](https://matplotlib.org/)
 
-Then run commands ```nltk.download('punkt')``` and ```nltk.download('stopwords')``` in a python file if these modules are not downloaded.
+Then run commands ```nltk.download('punkt')``` and ```nltk.download('stopwords')``` in a Python program or iPython  if these modules are not downloaded.
 
-### Run
+***This repository contains data files inside folder ```data/``` whose size is >100 MB, such files are being tracked using Git LFS. Hence install [Git LFS](https://git-lfs.github.com/).***
 
-Note - Run the commands for the modules in the given order since next modules users output files from previous module.
+### Commands to Run
+
+Note - Run the commands for the modules in the given order since next modules uses output files from previous module. All the commands should be run inside the directory specified for each module.
 
 #### Scrapping
 
@@ -210,8 +234,8 @@ cd scraping/
 python scrape_prof_data.py
 ```
 
-This module scrapes data from Google Scholar Pages by taking input from ```./data/csrankings-{x}.csv``` and outputing scraped data in ```./data/professor_data-{x}.csv```. Scraping could take too much time hence we recommend not to run these commands instead use directly use the already scraped data.
-
+This module scrapes data from Google Scholar Pages by taking input from ```./data/csrankings-{x}.csv``` and outputing scraped data in ```./data/professor_data-{x}.csv```. Scraping could take too much time hence we recommend not to run these commands instead use directly use the already scraped data. ```x``` varies from 0 to 9
+ 
 #### Cleaning
 
 ```
@@ -230,11 +254,24 @@ python build_index.py
 
 This module takes as input the files ```./data/professor_data-{x}-cleaned.csv``` and build indices ```./data/name_and_affiliation_index_full.json``` and ```./data/topic_and_paper_index_full.json```
 
-#### Precomputation for Querying
+#### Precomputation for TF-IDF
 
+```
+cd querying/
+python compute_tf_idf.py
+```
+
+This module takes as input the files ```./data/topic_and_paper_index_full.json``` and ```./data/metadata.csv``` and computes TF-IDF values for every document-term pair if it exists. It then outputs these values in file ```./data/tf_idf_scores_topic_and_paper_full.json``` which is used while querying using tf-idf retrieval method.
 
 
 #### Web Server
+
+```
+cd web_server
+python -m flask run
+```
+
+This module runs the web app on localhost (127.0.0.1:5000). The user can now interact with the Search Engine.
 
 #### Evaluation
 
@@ -243,6 +280,15 @@ This module takes as input the files ```./data/professor_data-{x}-cleaned.csv```
 
 ## References and Credits
 
-This project has been made as a part of project component of the course **CS-328: Introduction to Data Science** offered at IIT Gandhinagar in Semester-2 AY 2020-21 under the guidance of **Prof. Anirban Dasgupta**.
+This project has been made as a part of project component of the course **CS-328: Introduction to Data Science** offered at IIT Gandhinagar in Semester-II of AY 2020-21 under the guidance of **Prof. Anirban Dasgupta**.
 
-The contributors of this project are [Nishikant Parmar](https://github.com/nishikantparmariam/), [Chris Francis](https://github.com/frank-chris), [Amey Kulkarni](https://github.com/amey-kulkarni27)
+### References
+- Berger, E. (2017). GitHub Repository. [emeryberger/CSRankings](https://github.com/emeryberger/CSrankings).
+- Rajaraman, A.; Ullman, J.D. (2011). "Data Mining" (PDF). Mining of Massive Datasets. pp.
+1–17.
+
+### Contributors
+
+- [Amey Kulkarni 18110016](https://github.com/amey-kulkarni27)
+- [Chris Francis 18110041](https://github.com/frank-chris)
+- [Nishikant Parmar 18110108](https://github.com/nishikantparmariam/)
