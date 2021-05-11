@@ -49,13 +49,57 @@ and also evaluated its performance in terms of time and quality of results.
 
 ## Modules of Search Engine
 
+### Scraping and Retrieving Text
+
+This module uses the list of Google Scholar IDs of professors(from CSRankings, split across 10 files), scrapes data from their Google Scholar pages and stores it as CSV.
+
+### Cleaning Data
+
+This module cleans the scraped data from the previous module and stores it as CSV.
+
+### Building Index
+
+This module uses the cleaned data to build two inverted indices (first for name and affiliation, second for topics and paper titles) and stores them as JSON.
+
+### Query Processing and Ranking
+
+This module receives query information from the "Backend", processes it and returns an ordered list of professors depending upon the specifications provided by the user.
+
+### Backend (Web Server)
+
+This module forwards the user's query to the "Query Processing and Ranking" module and acts as a intermediate to user's browser.
+
+### User
+
+The user types a query, specifies the retrieval method(Boolean, phrase or TF-IDF) and the context in which he wants the results(names and affiliations or topics and paper titles).
+
+### Computing Data Statistics
+
+This module is not part of the main pipeline of the search engine. It computes and plots various statistics of the cleaned dataset. 
+
+### Evaluation
+
+It generates its own queries, runs the queries using "Querying and Ranking" module, evaluates search results and plots the evaluation metrics. This module is also not part of the main pipeline. 
+
 ## Work Flow
 
 ![SS2](flow-chart.png)
 
 ## Evaluation Metrics
 
+![MR](evaluation/median_rank.png)
+
+![RR](evaluation/recall_rate.png)
+
+![AQT](evaluation/average_query_time.png)
+
 ## Future Work
+
+* Scraping data from homepages of professors and universities, periodically.
+* Making a directed graph using citations e.g. if a professor (in one of his papers) cites another professor's paper then it can be a directed edge. This graph can then be used to implement Pagerank.
+* Improving user experience by adding search history and providing suggestions based on collaborative filtering.
+* Making the default ranking metric(for Phrase and Boolean Retrieval) learn-able based on user feedback on search results.
+* Evaluating the search engine with real users.
 
 ## Code Structure
 
@@ -199,6 +243,6 @@ This module takes as input the files ```./data/professor_data-{x}-cleaned.csv```
 
 ## References and Credits
 
-This project has been made as a part of project component of the course **Introduction to Data Science** offered at IIT Gandhinagar in Semester-2 AY 2020-21 under the guidance of **Prof. Anirban Dasgupta**.
+This project has been made as a part of project component of the course **CS-328: Introduction to Data Science** offered at IIT Gandhinagar in Semester-2 AY 2020-21 under the guidance of **Prof. Anirban Dasgupta**.
 
 The contributors of this project are [Nishikant Parmar](https://github.com/nishikantparmariam/), [Chris Francis](https://github.com/frank-chris), [Amey Kulkarni](https://github.com/amey-kulkarni27)

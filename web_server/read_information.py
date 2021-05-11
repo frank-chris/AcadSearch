@@ -8,6 +8,18 @@ sys.path.append('../helper_functions/')
 from common_functions import get_file_index_and_prof_index, check_for_nan
 
 def get_parameters(request):
+    '''
+    Function to extract query, query method and search context(index type)
+    from the request
+
+    Input:
+    > request - HTTP request
+    
+    Output:
+    > (search_query, query_method, index_type) - a tuple consisting of the
+    search query, query method(boolean, phrase or TF-IDF) and index type(name and affiliation
+    or topics and paper titles)
+    '''
     try:
         search_query = str(request.args['query'])               
     except:
@@ -26,20 +38,45 @@ def get_parameters(request):
     return (search_query, query_method, index_type)
 
 def make_list(initial_string):
+    '''
+    Function to convert str(list) to list
+
+    Input:
+    > initial_string - a list type-casted as str
+
+    Output:
+    > list of items from the str-type-casted list
+    '''
     return initial_string.lstrip('[\'').rstrip('\']').split('\', \'')
 
 def make_list_citations(initial_string):
+    '''
+    Helper function for creating a python list of citations from the raw HTML string obtained
+    from a professor's webpage.
+    '''
     try:
         return list(map(int,initial_string.lstrip('[').rstrip(']').split(', ')))
     except:
         return []
 
+# number of cleaned files
 file_count = 10
 
+# read cleaned CSV files
 data_files = [pd.read_csv('../data/professor_data-'+str(file_index)+'-cleaned.csv',header=None,encoding='utf8') for file_index in range(file_count) ]
 
 def read_prof_information(prof_id):   
+    '''
+    Function to read information of the professor whose
+    Global ID is given and return it as a dictionary
 
+    Input:
+    > prof_id - Global ID of the professor whose data is to be read and returned
+
+    Output:
+    > data_dict_to_return - a dictionary containing all the information of the professor
+    whose Global ID was given as prof_id
+    '''
     file_index, prof_index = get_file_index_and_prof_index(prof_id)
 
     data_dict_to_return = dict()    

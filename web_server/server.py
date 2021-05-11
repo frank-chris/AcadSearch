@@ -16,11 +16,20 @@ print("Files loaded. Now, open in browser.")
 
 @app.route('/images/<path:path>')
 def send_image(path):
+    '''
+    Function bound to the URL '/images/<path:path>'
+
+    Returns image at path
+    '''
     return send_from_directory('images', path)
 
 @app.route('/', methods=['GET','POST'])
 def search():  
-
+    '''
+    Function bound to the URL '/' 
+    
+    Returns a rendered HTML template
+    '''
     start_time = time.time()
     results_found = 0
 
