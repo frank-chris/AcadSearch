@@ -93,9 +93,32 @@ It generates its own queries, runs the queries using "Querying and Ranking" modu
 
 ## Evaluation of Search Engine
 
+Consider a user who has a particular professor in his mind, he using some information of that professor like name, affiliation, or title of a paper of that professor, and by choosing appropriate querying method (mentioned in Querying and Ranking) searches and gets results. Now, we define the \emph{rank} as the position where the professor he had in mind shows up in the search results. Here, the professor in his mind is the ground truth.
+
+We generated random 500 Professors and queried the search engine using the search query and retrieval method pairs given below. The appropriate index i.e. name and affiliation or research topics and paper titles was used for each combination. Since, we already had the unique ID of the Professors before querying, we lookup for that unique ID in the matched Professors IDs returned by Querying and Ranking module. 
+
+
+| Search Query  | Retrieval Method | Index Used | Pair Label in Plot |
+| :---: | :---: | :---: | :---: | 
+| Professor Name | Boolean AND | Name and Affiliation | N, B | 
+| Professor Name | Phrase Retrieval | Name and Affiliation | N, Ph | 
+| Affiliation | Boolean AND | Name and Affiliation | A, B | 
+| Affiliation | Boolean AND | Name and Affiliation | A, Ph | 
+| Paper Title* | Boolean AND | Research Topics and Paper Title | P, B | 
+| Paper Title* | Phrase Retrieval | Research Topics and Paper Title | P, Ph | 
+| Paper Titie* | TF-IDF | Research Topics and Paper Title | P, T | 
+
+*The paper title for a professor is chosen randomly out of his available papers.
+
+### Median Rank
+
 ![MR](evaluation/median_rank.png)
 
+### Recall Rate
+
 ![RR](evaluation/recall_rate.png)
+
+### Average Query Time
 
 ![AQT](evaluation/average_query_time.png)
 
@@ -106,7 +129,7 @@ The report can be accessed from [here](Report.pdf)
 ## Presentation Slides and Video
 
 - The presentation slides can be accessed from [here (PDF)](Slides.pdf) and [here (PPTX)](Slides.pptx)
-- The video can be accessed from [here](youtube)
+- The video can be accessed from [here](https://www.youtube.com/watch?v=REV_GJ80Q5k)
 
 
 ## Future Work
