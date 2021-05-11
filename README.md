@@ -1,6 +1,7 @@
 # Acad Search
 
-The web app is live at [acadsearch.pythonanywhere.com](https://acadsearch.pythonanywhere.com). We recommend opening in Desktop.
+
+The web app is live at [acadsearch.pythonanywhere.com](https://acadsearch.pythonanywhere.com), its recommended to open in Desktop mode for better user experience.
 
 ## Table of Contents
 
@@ -104,7 +105,7 @@ The report can be accessed from [here](Report.pdf)
 
 ## Presentation Slides and Video
 
-- The presentation slides can be accessed from [here (PDF)](slides.pdf) and [here (PPTX)](slides.pptx)
+- The presentation slides can be accessed from [here (PDF)](Slides.pdf) and [here (PPTX)](Slides.pptx)
 - The video can be accessed from [here](youtube)
 
 
@@ -264,7 +265,9 @@ cd web_server
 python -m flask run
 ```
 
-This module runs the web app on localhost (127.0.0.1:5000). The user can now interact with the Search Engine. With this module the main pipeline of Search Engine completes. The next two modules are used for computing statistics from the data and evaluating the Search Engine and are not part of the main pipeline.
+This module runs the web app on localhost (127.0.0.1:5000). The user can now interact with the Search Engine. With this module the main pipeline of Search Engine completes. The next two modules are used for computing statistics from the data and evaluating the Search Engine and are not part of the main pipeline. 
+
+The live version of the web app at [acadsearch.pythonanywhere.com](https://acadsearch.pythonanywhere.com) is currently running on 80% of total dataset of the professors due to memory limits on hosting platform. The full version can be run on localhost by using the instructions mentioned above.
 
 #### Evaluation
 
